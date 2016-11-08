@@ -1,0 +1,19 @@
+{
+  "name": "Writer",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "pug": "^2.0.0-beta6",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "electron": "^1.4.5",
+    "electron-reload": "^1.0.2",
+    "electron-stylus": "^0.1.1"
+  }
+}

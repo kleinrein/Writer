@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Writer</title>
+        <script>
+            require('electron-stylus')(__dirname + '/styles/master.styl').then(function() {
+                console.log('-- stylus loaded', new Date())
+            })
+        </script>
+
+        <script>
+            var $ = jQuery = require('jquery')
+        </script>
+    </head>
+    <body>
+        <div id="wrapper"></div>
+    </body>
+
+    <script>
+        const app = require('./lib/app')
+        app.on('rendered', (html) => {
+            $("#wrapper").html(html)
+        })
+
+        let showContent = (view) => {
+            app.emit('view-selected', view)
+        }
+
+        {
+            showContent('layout')
+        }
+
+        require('./renderer.js')
+    </script>
+</html>
