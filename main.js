@@ -24,3 +24,8 @@ app.on('activate', _ => {
         createWindow()
     }
 })
+
+
+ipc.on('save-file', (evt, content) => {
+
+})

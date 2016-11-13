@@ -14,13 +14,13 @@
         </script>
     </head>
     <body>
-        <div id="wrapper"></div>
+        <div id="writer-wrapper"></div>
     </body>
 
     <script>
         const app = require('./lib/app')
         app.on('rendered', (html) => {
-            $("#wrapper").html(html)
+            $("#writer-wrapper").html(html)
         })
 
         let showContent = (view) => {
