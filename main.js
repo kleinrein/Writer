@@ -1,5 +1,5 @@
 const electron = require('electron')
-const { app, BrowserWindow, ipcMain:ipc, Menu } = electron
+const { app, BrowserWindow, ipcMain:ipc, Menu, dialog } = electron
 
 require('electron-reload')(__dirname)
 
@@ -27,5 +27,8 @@ app.on('activate', _ => {
 
 
 ipc.on('save-file', (evt, content) => {
+    console.log('save file')
+    dialog.showSaveDialog({title: 'Save file', filters : [ { name: 'text', extensions: ['txt'] } ]}, (filename) => {
 
+    })
 })

@@ -1,9 +1,9 @@
 const electron = require('electron')
-const { app, ipcRenderer: ipc, remote, dialog } = electron
+const { app, ipcRenderer: ipc, remote } = electron
 
 $(function() {
 
-    $('button').click(function(e) {
+    $(document).on('click', 'button', _ => {
         ipc.send('save-file', 'testfile')
     })
 })
