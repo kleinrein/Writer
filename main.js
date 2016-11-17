@@ -57,3 +57,21 @@ ipc.on('save-file', (evt, content) => {
             })
     })
 })
+
+ipc.on('open-file', (evt, content) => {
+    dialog.showOpenDialog({
+        title: 'Open file',
+        filters: [{
+            name: 'text',
+            extensions: ['txt']
+        }],
+        properties: ['openFile']
+    }, (filepath) => {
+        if (filepath !== undefined)
+            console.log(filepath)
+            fs.readFile(filepath[0], 'utf8', (err, data) => {
+                if (err) console.log(err)
+                console.log(data.toString())
+            })
+    })
+})
