@@ -14,6 +14,14 @@ $(function() {
     })
 
     $(document).on('click', '#writer-wrapper', (e) => {
-
+        const editor = document.querySelector('.editor')
+        if (editor != undefined) editor.focus()
     })
+
+    $(document).on('click', '.overview', _ => {
+        ipc.send('new-file')
+
+        showContent('editor')
+    })
+
 })

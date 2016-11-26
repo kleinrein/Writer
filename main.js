@@ -8,7 +8,10 @@ const {
     dialog
 } = electron
 
-require('electron-reload')(__dirname)
+const Datastore = require('nedb')
+const db = new Datastore({ filename: 'data/writer.db', autoload: true })
+
+// require('electron-reload')(__dirname)
 
 app.on('ready', _ => {
     mainWindow = new BrowserWindow({
@@ -38,7 +41,7 @@ app.on('activate', _ => {
     }
 })
 
-
+// Save file
 ipc.on('save-file', (evt, content) => {
     console.log('save file with content: ' + content)
     dialog.showSaveDialog({
@@ -58,6 +61,7 @@ ipc.on('save-file', (evt, content) => {
     })
 })
 
+// Open file
 ipc.on('open-file', (evt, content) => {
     dialog.showOpenDialog({
         title: 'Open file',
@@ -74,4 +78,9 @@ ipc.on('open-file', (evt, content) => {
                 console.log(data.toString())
             })
     })
+})
+
+
+ipc.on('new-file', (evt) => {
+
 })
