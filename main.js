@@ -11,7 +11,17 @@ const {
 const Datastore = require('nedb')
 const db = new Datastore({ filename: 'data/writer.db', autoload: true })
 
-// require('electron-reload')(__dirname)
+// Insert db testing
+/*
+var doc = { content: "Test 123.. :-)" }
+
+db.insert(doc, function (err, newDoc) {   // Callback is optional
+  // newDoc is the newly inserted document, including its _id
+  // newDoc has no key called notToBeSaved since its value was undefined
+});
+*/
+
+const client = require('electron-connect').client
 
 app.on('ready', _ => {
     mainWindow = new BrowserWindow({
@@ -27,6 +37,8 @@ app.on('ready', _ => {
     mainWindow.on('closed', _ => {
         mainWindow = null
     })
+
+    client.create(mainWindow)
 })
 
 app.on('window-all-closed', _ => {
