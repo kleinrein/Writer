@@ -11,4 +11,6 @@ gulp.task('serve', function () {
 
   // Reload renderer process
   gulp.watch(['renderer.js', 'index.html'], electron.reload);
+
+  gulp.watch('./styles/**/*.*', electron.reload)
 });

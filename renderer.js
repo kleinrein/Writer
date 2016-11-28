@@ -27,24 +27,47 @@ $(function() {
         if (editor != undefined) editor.focus()
     })
 
+    $(document).on('blur', '#filename', (e) => {
+        console.log('change')
+
+        const filename = $(e.target).text()
+        const id = $('#editor').data('id')
+
+        db.loadDatabase((err) => {
+            db.update({ _id: id }, { $set: { filename: filename} }, {}, function () {
+              console.log('updated')
+            });
+        })
+    })
+
     $(document).on('click', '.overview', (e) => {
-        const id = $(e.target).data('id')
+        let id = $(e.target).data('id')
+        // TODO => Fix this properly, so click on span binds to parent
+        if (id === undefined)
+            id = $(e.target).parent().data('id')
+
         console.log(id)
-        showContent('editor')
 
         if ($(e.target).hasClass('overview-new-file')) {
             // New document
 
         } else {
             // Existing document
-            db.loadDatabase((err) => { // Callback is optional
+            db.loadDatabase((err) => {
                 db.findOne({
                     _id: id
                 }, (err, doc) => {
-                    $('.editor').html(doc.content)
-                });
-            });
+                    console.log(doc)
+                    if (doc != null) {
+                        showContent('editor')
+                        $('#editor').html(doc.content)
+                        $('#filename').html(doc.filename)
 
+                        // TODO => Store the id somewhere else?
+                        $('#editor').attr('data-id', id)
+                    }
+                })
+            })
         }
     })
 })
