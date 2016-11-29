@@ -30,7 +30,7 @@ app.on('ready', _ => {
         width: 800,
         height: 600,
         minWidth: 500,
-        minHeight: 250,
+        minHeight: 400,
         title: 'Writer'
     })
     mainWindow.loadURL(`file://${__dirname}/index.html`)

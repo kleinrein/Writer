@@ -38,13 +38,21 @@
             console.log("testing")
 
             // Retrieve existing docs
-            db.find({}, (err, docs) => {
+            db.find({toDelete: false}, (err, docs) => {
                 console.log(docs)
                 for (doc of docs) {
                     // Select first 500chars for overview
+                    // TODO => Maybe use pug for this?
                     $('.overviews').prepend(
-                        `<div class="overview" data-id="${doc._id}">
-                            <span>${doc.content}</span>
+                        `
+                        <div class="overview-doc">
+                            <div class="overview" data-id="${doc._id}">
+                                <span>${doc.content}</span>
+                                <div class="overview-delete">
+                                    <i class="ion-ios-close-empty"></i>
+                                </div>
+                            </div>
+                            <p class="overview-filename">${doc.filename}</p>
                         </div>`
                     )
                 }
