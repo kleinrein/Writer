@@ -10,9 +10,24 @@ const db = new Datastore({
     filename: 'data/writer.db'
 })
 
+require('./lib/vendor/velocity.min.js')
+require('./lib/vendor/velocity.ui.min.js')
+
 $(function() {
     $(document).on('click', '#btn-back', (e) => {
         showContent('layout')
+    })
+
+    // Settings
+    $(document).on('click', '#btn-settings', (e) => {
+        $('#settings-wrapper').removeAttr("hidden")
+        $('#settings-wrapper').fadeIn()
+    })
+
+    // Close settings
+    $(document).on('click', '#btn-close-settings', (e) => {
+        $('#settings-wrapper').attr('hidden')
+        $('#settings-wrapper').fadeOut()
     })
 
     $(document).on('click', '#writer-wrapper', (e) => {
@@ -23,26 +38,55 @@ $(function() {
     // Delete document
     $(document).on('click', '.overview-delete', (e) => {
         console.log('delete')
+        const doc = $(e.target).closest('.overview-doc')
 
         const id = $(e.target).closest('.overview').data('id')
 
-        db.loadDatabase((err) => {
-            // Set toDelete flag to true
-            db.update({
-                _id: id
-            }, {
-                $set: {
-                    toDelete: true
-                }
-            }, {}, _ => {
-                console.log('toDelete flag set')
-                // Update view (remove deleted doc)
+        // Remove document view
+        doc.addClass('overview-delete-anim')
 
-                // Start timer
-                setTimeout( _ => {
-                    
-                }, 5000)
+        // Update view (remove deleted doc)
+        let undo = false
+
+        // Make a undo button
+        $('#writer-wrapper').append(`
+            <div class="overview-undo-delete" data-id="${id}" hidden="hidden">
+                <button>
+                    <span>Undo</span>
+                </button>
+            </div>`)
+
+        let undoBtn = $(`.overview-undo-delete[data-id='${id}']`)
+
+        // Show undo button
+        undoBtn.removeAttr('hidden')
+        undoBtn.velocity("transition.slideUpBigIn", {
+            duration: 500,
+            complete: function() {
+                console.log('complete')
+            }
+        })
+        // Start timer
+        let undoTimer = setTimeout(_ => {
+            console.log('five sec has gone ')
+
+            db.loadDatabase((err) => {
+                db.remove({
+                    _id: id
+                }, {}, (err, numRemoved) => {
+                    console.log('removed')
+                    doc.remove()
+                })
             })
+
+            undoBtn.remove()
+        }, 5000)
+
+        document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
+            clearTimeout(undoTimer)
+            console.log('clicked undo')
+            doc.fadeIn()
+            undoBtn.remove()
         })
     })
 

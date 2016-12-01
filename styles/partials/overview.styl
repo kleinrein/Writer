@@ -7,7 +7,45 @@
     display flex
     flex-direction row
     flex-wrap wrap
+    transition all 500ms ease-in-out
     .overview-doc
+        transition all 500ms ease-in-out
+        perspective: 100px;
+        .overview
+            display flex
+            justify-content center
+            align-items center
+            position relative
+            transition all 250ms ease-in-out
+            width 150px
+            height 200px
+            border-radius 5px
+            color shadylady
+            background-color eggwhite
+            font-size 50px
+            cursor default
+            box-shadow inset 0 0 5px 1px rgba(210, 210, 210, 0.5)
+            box-shadow 0 0 5px 1px rgba(210, 210, 210, 0.5)
+            border 1px solid normalgrey
+            margin 25px 20px 10px 20px
+            -webkit-user-select none
+            span
+                font-size 6px
+                height 100%
+                width 100%
+                padding 10px
+                top 0
+                margin-top 30px
+                z-index 10
+                position relative
+            &:hover
+                box-shadow 0 0 20px .5px rgba(133, 133, 133, 0.28)
+        .overview-new-file
+            @extend .overviews .overview-doc .overview
+            background-color silversand
+            &:hover
+                background-color asbestos
+                color eggwhite
         .overview-filename
             text-align center
             font-size 14px
@@ -34,38 +72,23 @@
                 background-color flatred
                 i
                     color eggwhite
-        .overview
-            display flex
-            justify-content center
-            align-items center
-            position relative
-            width 150px
-            height 200px
-            border-radius 5px
-            color shadylady
-            background-color eggwhite
-            font-size 50px
-            cursor default
-            box-shadow inset 0 0 5px 1px rgba(210, 210, 210, 0.5)
-            box-shadow 0 0 5px 1px rgba(210, 210, 210, 0.5)
-            border 1px solid normalgrey
-            margin 25px 20px 10px 20px
-            -webkit-user-select none
-            transition all 200ms ease-in-out
-            span
-                font-size 6px
-                height 100%
-                width 100%
-                padding 10px
-                top 0
-                margin-top 30px
-                z-index 10
-                position relative
-            &:hover
-                box-shadow 0 0 20px .5px rgba(133, 133, 133, 0.28)
-        .overview-new-file
-            @extend .overviews .overview-doc .overview
-            background-color silversand
-            &:hover
-                background-color asbestos
-                color eggwhite
+
+.overview-delete-anim
+    height auto
+    width auto
+    opacity 0
+
+.overview-undo-delete
+    width 100%
+    position fixed
+    bottom 0
+    text-align center
+    padding 15px
+    button
+        border-radius 5px
+        border none
+        outline none
+        padding 5px
+        background-color eucalyptus
+        color eggwhite
+        font-size 14px
