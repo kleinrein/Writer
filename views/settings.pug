@@ -2,7 +2,7 @@ mixin themeVid(img, text, id)
     .settings-theme
         input(type="radio" name="theme" id=id class="input-hidden" value=id)
         label(for=id)
-            img(src="http://baconmockup.com/300/200")
+            img(src=img)
         span= text
 
 #settings-wrapper(hidden)
@@ -24,6 +24,15 @@ mixin themeVid(img, text, id)
         .settings.settings-theme
             .setting
                 span Theme
-
-                +themeVid("", "Default", "default")
-                +themeVid("", "Winter", "winter")
+                .settings-theme-wrapper
+                    +themeVid("", "Default", "default")
+                    +themeVid("", "Winter", "winter")
+                    +themeVid("", "Aurora", "aurora")
+                    +themeVid("", "Evening", "evening")
+                    +themeVid("", "Kaleidoscope", "kaleidoscope")
+                    +themeVid("", "Lake", "lake")
+                    +themeVid("", "Rainstorm", "rainstorm")
+                    +themeVid("", "Sea", "sea")
+                    +themeVid("", "Space", "space")
+                    +themeVid("", "Waves", "waves")
+                    +themeVid("", "Wind Energy", "windenergy")

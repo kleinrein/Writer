@@ -24,14 +24,16 @@ $(function() {
 
     // Settings
     $(document).on('click', '#btn-settings', (e) => {
-        $('#settings-wrapper').removeAttr("hidden")
-        $('#settings-wrapper').fadeIn()
+        $('#settings-wrapper').velocity('transition.slideDownIn', {
+            duration: 300
+        })
     })
 
     // Close settings
     $(document).on('click', '#btn-close-settings', (e) => {
-        $('#settings-wrapper').attr('hidden')
-        $('#settings-wrapper').fadeOut()
+        $('#settings-wrapper').velocity('transition.slideUpOut', {
+            duration: 300
+        })
     })
 
     $(document).on('click', '#writer-wrapper', (e) => {
@@ -120,7 +122,8 @@ $(function() {
         // Content is changed
         // Save changes
         const id = $(e.target).data('id')
-        const content = $(e.target).text()
+        const content = $(e.target).prop('innerHTML')
+        console.log(content)
 
         db.loadDatabase((err) => {
             db.update({
@@ -182,9 +185,8 @@ $(function() {
 
     $(document).on('click', '.overview', (e) => {
         // Close if user clicked delete button
-        const isDelete = $(e.target).hasClass('overview-delete') ||
-            $(e.target).hasClass('ion-ios-close-empty')
-        if (isDelete) return
+        if ($(e.target).hasClass('overview-delete') ||
+            $(e.target).hasClass('ion-ios-close-empty')) return
 
         let id = $(e.target).data('id')
             // TODO => Fix this properly, so click on span binds to parent
@@ -229,7 +231,35 @@ $(function() {
         })
     })
 
+    // Load settings
+    function loadSettings() {
+        // TODO => Load prefs on start
+
+        updateSettingsView()
+    }
+
     function updateSettingsView(newPref)  {
-        
+        // Darkmode
+        newPref.darkmode ? $('body').addClass('darkmode') : $('body').removeClass('darkmode')
+
+        // Font family
+
+        // Font size
+
+        // Theme
+        if (newPref.theme) {
+            if (newPref.theme === 'default') {
+                $('.video-wrapper').remove()
+            } else {
+                $('#writer-wrapper').append(`
+                    <div class="video-wrapper">
+                        <video preload="metadata" loop="" autoplay="" muted="" class="video">
+                            <source src="video/${newPref.theme}.mp4" type="video/mp4"/>
+                        </video>
+                        <div class="video-overlay"></div>
+                    </div>
+                `)
+            }
+        }
     }
 })
