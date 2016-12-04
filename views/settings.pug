@@ -1,8 +1,29 @@
+mixin themeVid(img, text, id)
+    .settings-theme
+        input(type="radio" name="theme" id=id class="input-hidden" value=id)
+        label(for=id)
+            img(src="http://baconmockup.com/300/200")
+        span= text
+
 #settings-wrapper(hidden)
-    .settings-general
-        .setting
-            span Dark mode
-            input(type="checkbox")
-    .settings-close
-        #btn-close-settings
-            i.ion-ios-close-empty
+    #settings-topbar
+        .flex
+        .settings-close
+            #btn-close-settings.btn
+                i.ion-ios-close-empty
+    form#settings-form
+        .settings.settings-general
+            .setting
+                span Dark mode
+                input#pref-darkmode(type="checkbox" name="darkmode")
+            .setting
+                span Font family
+            .setting
+                span Font size
+                input(type="range" min="8" max="46" step="2" name="fontsize")
+        .settings.settings-theme
+            .setting
+                span Theme
+
+                +themeVid("", "Default", "default")
+                +themeVid("", "Winter", "winter")

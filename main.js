@@ -9,9 +9,29 @@ const {
 } = electron
 
 const Datastore = require('nedb')
+
 const db = new Datastore({ filename: 'data/writer.db', autoload: true })
+const dbPref = new Datastore({ filename: 'data/writerPref.db', autoload: true })
 
 // Insert db testing
+
+// Insert pref if null
+/*
+dbPref.loadDatabase((err) => {
+    dbPref.find({}, (err, docs) => {
+        if (docs.length === 0) {
+            const prefDoc = {
+                darkmode : false
+            }
+
+            dbPref.insert(prefDoc, (err, newDoc) =>  {
+
+            })
+        }
+    })
+})
+*/
+
 
 /*
 var doc = { content: "Test 123.. :-)", filename: "Testnavn" }

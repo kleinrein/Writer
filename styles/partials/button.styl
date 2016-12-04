@@ -1,14 +1,4 @@
-#btn-back
-    -webkit-user-select none
-    cursor default
-    width 10px
-    height 10px
-
-#btn-settings
-    -webkit-user-select none
-    cursor default
-
-#btn-back, #btn-settings
+defaultButton()
     cursor default
     width 15px
     height 15px
@@ -22,3 +12,19 @@
         display flex
     &:hover
         border solid 1px normalgrey
+
+.btn
+    defaultButton()
+
+noUserSelect()
+    -webkit-user-select none
+    cursor default
+
+#btn-back
+    noUserSelect()
+    width 10px
+    height 10px
+
+#btn-settings,
+#btn-close-settings
+    noUserSelect()

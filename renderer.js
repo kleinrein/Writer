@@ -10,6 +10,10 @@ const db = new Datastore({
     filename: 'data/writer.db'
 })
 
+const dbPref = new Datastore({
+    filename: 'data/writerPref.db'
+})
+
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
 
@@ -44,6 +48,7 @@ $(function() {
 
         // Remove document view
         doc.addClass('overview-delete-anim')
+        doc.fadeOut()
 
         // Update view (remove deleted doc)
         let undo = false
@@ -60,12 +65,30 @@ $(function() {
 
         // Show undo button
         undoBtn.removeAttr('hidden')
-        undoBtn.velocity("transition.slideUpBigIn", {
-            duration: 500,
-            complete: function() {
+        undoBtn.velocity({
+            bottom: "0",
+            opacity: 1
+        }, {
+            duration: 750,
+            easing: "easeOutQuart",
+            complete: _ => {
                 console.log('complete')
             }
         })
+
+        const removeUndoBtn = _ => {
+            undoBtn.velocity({
+                bottom: "-50px",
+                opacity: 0
+            }, {
+                duration: 750,
+                easing: "easeOutQuart",
+                complete: _ => {
+                    undoBtn.remove()
+                }
+            })
+        }
+
         // Start timer
         let undoTimer = setTimeout(_ => {
             console.log('five sec has gone ')
@@ -79,14 +102,16 @@ $(function() {
                 })
             })
 
-            undoBtn.remove()
-        }, 5000)
+            removeUndoBtn()
+        }, 3000)
 
+        // Click listener to button
         document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
             clearTimeout(undoTimer)
             console.log('clicked undo')
             doc.fadeIn()
-            undoBtn.remove()
+
+            removeUndoBtn()
         })
     })
 
@@ -183,4 +208,28 @@ $(function() {
             })
         })
     })
+
+    // Update settings
+    $(document).on('keyup change', '#settings-form :input', (e) => {
+        const form = $(e.target).closest('form')
+        const serializedForm = form.serializeArray().reduce((a, x) => {
+            a[x.name] = x.value;
+            return a;
+        }, {});
+
+        dbPref.loadDatabase((err) => {
+            dbPref.remove({}, {
+                multi: true
+            }, function(err, numRemoved) {
+                console.log(numRemoved)
+                dbPref.insert(serializedForm, (err, newDoc) =>  {
+                    updateSettingsView(newDoc)
+                })
+            });
+        })
+    })
+
+    function updateSettingsView(newPref)  {
+        
+    }
 })
