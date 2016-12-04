@@ -246,19 +246,26 @@ $(function() {
 
         // Font size
 
+        const darkThemes = ['aurora', 'evening']
+        const lightThemes = ['']
+
         // Theme
         if (newPref.theme) {
-            if (newPref.theme === 'default') {
-                $('.video-wrapper').remove()
+            if (newPref.usevideo) {
+                if (newPref.theme === 'default') {
+                    $('.video-wrapper').remove()
+                } else {
+                    $('#writer-wrapper').append(`
+                        <div class="video-wrapper">
+                            <video preload="metadata" loop="" autoplay="" muted="" class="video">
+                                <source src="video/${newPref.theme}.mp4" type="video/mp4"/>
+                            </video>
+                            <div class="video-overlay"></div>
+                        </div>
+                    `)
+                }
             } else {
-                $('#writer-wrapper').append(`
-                    <div class="video-wrapper">
-                        <video preload="metadata" loop="" autoplay="" muted="" class="video">
-                            <source src="video/${newPref.theme}.mp4" type="video/mp4"/>
-                        </video>
-                        <div class="video-overlay"></div>
-                    </div>
-                `)
+                $('#writer-wrapper').append(`<div class="image-bg" style="background-image: url(images/${newPref.theme}.jpg)"></div>"`)
             }
         }
     }

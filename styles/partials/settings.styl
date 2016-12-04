@@ -33,11 +33,14 @@
             flex-wrap wrap
             overflow-y scroll
             height 800px
+            width 400px
             margin-top 25px
             position relative
             .settings-theme
                 margin-right 25px
                 text-align center
+                .theme-img
+                    -webkit-background-size cover
                 span
                     text-transform none
                     font-size 16px
@@ -64,14 +67,14 @@ input[type="range"]::-webkit-slider-thumb
     transition all 0.5s ease
 
 
-input[type=radio]:checked + label > img
+input[type=radio]:checked + label > .theme-img
     border 2px solid mineshaft
 
-input[type=radio] + label>img
+input[type=radio] + label>.theme-img
     border 2px solid transparent
     width 150px
     height 150px
     transition 500ms all
 
-input[type=radio]:checked + label>img
+input[type=radio]:checked + label>.theme-img
     opacity 1
