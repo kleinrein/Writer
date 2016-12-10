@@ -1,3 +1,12 @@
-include views/topbar.pug
-include views/settings.pug
-#editor(contenteditable="true")
+include topbar.pug
+#editor(contenteditable="true" style=`font-size:${fontsize}px`)
+
+unless theme == 'default'
+    if usevideo
+        .video-wrapper
+            video.video(preload='metadata', loop='', autoplay='', muted='')
+                source(src=`video/${theme}.mp4`, type='video/mp4')
+        .video-overlay
+    else
+        .image-bg(style=`background-image: url(images/${theme}.jpg)`)
+        p= theme

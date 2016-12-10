@@ -15,15 +15,26 @@ mixin themeVid(img, text, id)
         .settings.settings-general
             .setting
                 span Dark mode
-                input#pref-darkmode(type="checkbox" name="darkmode")
+                if darkmode
+                    input#pref-darkmode(type="checkbox" name="darkmode" checked)
+                else
+                    input#pref-darkmode(type="checkbox" name="darkmode")
             .setting
                 span Font family
+                select
+                    - const fonts = ['FiraSans']
+                    each val in fonts
+                        option(value="val")= val
             .setting
                 span Font size
-                input(type="range" min="8" max="46" step="2" name="fontsize")
+                input#setting-font-size(type="range" min="8" max="46" step="2" value=`${fontsize}` name="fontsize")
+                small.small#setting-font-size-text Default
         .settings.settings-theme
             .setting
                 span Theme
+                .setting
+                    span Use video
+                    input(type="checkbox" name="usevideo")
                 .settings-theme-wrapper
                     +themeVid("", "Default", "default")
                     +themeVid("", "Winter", "winter")
@@ -36,7 +47,3 @@ mixin themeVid(img, text, id)
                     +themeVid("", "Space", "space")
                     +themeVid("", "Waves", "waves")
                     +themeVid("", "Wind Energy", "windenergy")
-        .settings
-            .setting
-                span Use video
-                input(type="checkbox" name="usevideo")

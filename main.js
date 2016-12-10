@@ -7,9 +7,9 @@ const {
     Menu,
     dialog
 } = electron
+const menuTemplate = require('./lib/menu')
 
 const Datastore = require('nedb')
-
 const db = new Datastore({ filename: 'data/writer.db', autoload: true })
 const dbPref = new Datastore({ filename: 'data/writerPref.db', autoload: true })
 
@@ -31,8 +31,6 @@ dbPref.loadDatabase((err) => {
     })
 })
 */
-
-
 /*
 var doc = { content: "Test 123.. :-)", filename: "Testnavn" }
 
@@ -61,6 +59,9 @@ app.on('ready', _ => {
     })
 
     client.create(mainWindow)
+
+    const menuContents = Menu.buildFromTemplate(menuTemplate(mainWindow))
+    Menu.setApplicationMenu(menuContents)
 })
 
 app.on('window-all-closed', _ => {
