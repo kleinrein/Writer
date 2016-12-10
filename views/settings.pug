@@ -21,10 +21,14 @@ mixin themeVid(img, text, id)
                     input#pref-darkmode(type="checkbox" name="darkmode")
             .setting
                 span Font family
-                select
-                    - const fonts = ['FiraSans']
+                select(name="fontfamily")
+                    -
+                        const fonts = ['FiraSans', 'BadScript', 'AmaticSC',
+                                     'Handlee', 'IndieFlower', 'OpenSans',
+                                     'PlayfairDisplay', 'PTSans', 'RobotoLight',
+                                     'RobotRegular', 'RobotoThin'].sort()
                     each val in fonts
-                        option(value="val")= val
+                        option(value=`${val}`)= val
             .setting
                 span Font size
                 input#setting-font-size(type="range" min="8" max="46" step="2" value=`${fontsize}` name="fontsize")

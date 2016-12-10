@@ -31,6 +31,12 @@ $(function() {
         const compiledFunction = pug.compileFile('views/settings.pug')
         $('#writer-wrapper').append(compiledFunction(preferences))
 
+        // Iterate and show fonts select
+        $('#settings-wrapper select option').each(function(index) {
+            $(this).css('font-family', $(this).text())
+        })
+        $('#settings-wrapper select').css('font-family', $('#settings-wrapper select').text())
+
         $('#settings-wrapper').velocity('transition.slideDownIn', {
             duration: 300
         })
@@ -276,14 +282,16 @@ $(function() {
 
     function updateSettingsView(newPref)  {
         console.log(newPref)
-            // Darkmode
+        // Darkmode
         newPref.darkmode ? $('body').addClass('darkmode') : $('body').removeClass('darkmode')
 
+        const editor = document.querySelector('#editor')
+
         // Font family
+        editor.style.fontFamily = `${newPref.fontfamily}`
 
         // Font size
-        console.log(newPref.fontsize)
-        document.querySelector('#editor').style.fontSize = `${newPref.fontsize}px`
+        editor.style.fontSize = `${newPref.fontsize}px`
 
 
         const darkThemes = ['aurora', 'evening']
