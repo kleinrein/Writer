@@ -17,9 +17,25 @@ const dbPref = new Datastore({
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
 
+// Globals
 let preferences
+const darkThemes = ['aurora', 'evening', 'kaleidoscope', 'psychedelic', 'space', 'windenergy']
+const lightThemes = ['lake', 'rainstorm', 'sea', 'waves', 'winter']
 
+// Settings
 $(function() {
+    const checkBgs = newPref => {
+        const dark = darkThemes.includes(newPref.theme)
+        const light = lightThemes.includes(newPref.theme)
+
+        const bgChecks = document.querySelectorAll('.bg-check')
+
+        for (i = 0; i < bgChecks.length; ++i) {
+            bgChecks[i].classList.remove(dark ? 'light' : 'dark')
+            bgChecks[i].classList.add(dark ? 'dark' : 'light')
+        }
+    }
+
     // Back to overview
     $(document).on('click', '#btn-back', (e) => {
         showContent('layout')
@@ -203,6 +219,7 @@ $(function() {
                         $('#editor').attr('data-id', id)
 
                         // Show
+                        checkBgs(preferences)
                         $('#writer-wrapper').css('transform', 'none')
                         $('#writer-wrapper').velocity({
                             opacity: 1
@@ -282,7 +299,7 @@ $(function() {
 
     function updateSettingsView(newPref)  {
         console.log(newPref)
-        // Darkmode
+            // Darkmode
         newPref.darkmode ? $('body').addClass('darkmode') : $('body').removeClass('darkmode')
 
         const editor = document.querySelector('#editor')
@@ -292,10 +309,6 @@ $(function() {
 
         // Font size
         editor.style.fontSize = `${newPref.fontsize}px`
-
-
-        const darkThemes = ['aurora', 'evening']
-        const lightThemes = ['']
 
         // Theme
         if (newPref.theme === 'default') {
@@ -316,5 +329,8 @@ $(function() {
                 $('#writer-wrapper').append(`<div class="image-bg" style="background-image: url(images/${newPref.theme}.jpg)"></div>"`)
             }
         }
+
+        // Light/dark text
+        checkBgs(newPref)
     }
 })

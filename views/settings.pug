@@ -36,9 +36,12 @@ mixin themeVid(img, text, id)
         .settings.settings-theme
             .setting
                 span Theme
-                .setting
-                    span Use video
-                    input(type="checkbox" name="usevideo")
+                .setting.setting-small
+                    label Use video
+                    if usevideo
+                        input(type="checkbox" name="usevideo" checked)
+                    else
+                        input(type="checkbox" name="usevideo")
                 .settings-theme-wrapper
                     +themeVid("", "Default", "default")
                     +themeVid("", "Winter", "winter")
@@ -47,6 +50,7 @@ mixin themeVid(img, text, id)
                     +themeVid("", "Kaleidoscope", "kaleidoscope")
                     +themeVid("", "Lake", "lake")
                     +themeVid("", "Rainstorm", "rainstorm")
+                    +themeVid("", "Psychedelic", "psychedelic")
                     +themeVid("", "Sea", "sea")
                     +themeVid("", "Space", "space")
                     +themeVid("", "Waves", "waves")

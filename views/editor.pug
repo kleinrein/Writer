@@ -1,12 +1,11 @@
 include topbar.pug
-#editor(contenteditable="true" style=`font-size:${fontsize}px; font-family:${fontfamily}`)
+#editor.bg-check(contenteditable="true" style=`font-size:${fontsize}px; font-family:${fontfamily}`)
 
 unless theme == 'default'
     if usevideo
         .video-wrapper
             video.video(preload='metadata', loop='', autoplay='', muted='')
                 source(src=`video/${theme}.mp4`, type='video/mp4')
-        .video-overlay
     else
         .image-bg(style=`background-image: url(images/${theme}.jpg)`)
         p= theme
