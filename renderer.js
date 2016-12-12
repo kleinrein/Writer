@@ -25,14 +25,16 @@ const lightThemes = ['lake', 'rainstorm', 'sea', 'waves', 'winter']
 // Settings
 $(function() {
     const checkBgs = newPref => {
-        const dark = darkThemes.includes(newPref.theme)
-        const light = lightThemes.includes(newPref.theme)
+        if (newPref !== undefined) {
+            const dark = darkThemes.includes(newPref.theme)
+            const light = lightThemes.includes(newPref.theme)
 
-        const bgChecks = document.querySelectorAll('.bg-check')
+            const bgChecks = document.querySelectorAll('.bg-check')
 
-        for (i = 0; i < bgChecks.length; ++i) {
-            bgChecks[i].classList.remove(dark ? 'light' : 'dark')
-            bgChecks[i].classList.add(dark ? 'dark' : 'light')
+            for (i = 0; i < bgChecks.length; ++i) {
+                bgChecks[i].classList.remove(dark ? 'light' : 'dark')
+                bgChecks[i].classList.add(dark ? 'dark' : 'light')
+            }
         }
     }
 
@@ -151,12 +153,14 @@ $(function() {
 
     // Show on mouse move
     $(document).on("mouseover", (e) => {
-        $('#bottombar, #topbar').velocity({
-            opacity: 1
-        }, {
-            duration: 500,
-            easing: 'easeOutQuint'
-        })
+        if ($('#bottombar').css('opacity') == 0) {
+            $('#bottombar, #topbar').velocity({
+                opacity: 1
+            }, {
+                duration: 500,
+                easing: 'easeOutQuint'
+            })
+        }
     })
 
     // Change content

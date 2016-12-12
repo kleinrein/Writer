@@ -7,12 +7,12 @@ gulp.task 'serve', ->
     electron.start()
 
     # Restart browser process
-    gulp.watch 'main.js', electron.restart
+    gulp.watch './main.js', electron.restart
 
     # Reload renderer process
     gulp.watch [
-        'renderer.js'
-        'index.html'
+        './renderer.js'
+        './index.html'
     ], electron.reload
 
     # Reload styles

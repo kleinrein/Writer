@@ -1,9 +1,3 @@
-mixin themeVid(img, text, id)
-    .settings-theme
-        input(type="radio" name="theme" id=id class="input-hidden" value=id)
-        label(for=id)
-            .theme-img(style=`background-image: url(images/${id}.jpg)`)
-        span= text
 
 #settings-wrapper(hidden)
     #settings-topbar
@@ -28,7 +22,10 @@ mixin themeVid(img, text, id)
                                      'PlayfairDisplay', 'PTSans', 'RobotoLight',
                                      'RobotRegular', 'RobotoThin'].sort()
                     each val in fonts
-                        option(value=`${val}`)= val
+                        if val === fontfamily
+                            option(value=`${val}` selected)= val
+                        else
+                            option(value=`${val}`)= val
             .setting
                 span Font size
                 input#setting-font-size(type="range" min="8" max="46" step="2" value=`${fontsize}` name="fontsize")
@@ -42,16 +39,23 @@ mixin themeVid(img, text, id)
                         input(type="checkbox" name="usevideo" checked)
                     else
                         input(type="checkbox" name="usevideo")
+                -
+                    const themes = ['Default', 'Winter', 'Aurora',
+                                    'Evening', 'Kaleidoscope', 'Lake',
+                                    'Rainstorm', 'Psychedelic', 'Sea',
+                                    'Space', 'Waves', 'Wind Energy'].sort()
                 .settings-theme-wrapper
-                    +themeVid("", "Default", "default")
-                    +themeVid("", "Winter", "winter")
-                    +themeVid("", "Aurora", "aurora")
-                    +themeVid("", "Evening", "evening")
-                    +themeVid("", "Kaleidoscope", "kaleidoscope")
-                    +themeVid("", "Lake", "lake")
-                    +themeVid("", "Rainstorm", "rainstorm")
-                    +themeVid("", "Psychedelic", "psychedelic")
-                    +themeVid("", "Sea", "sea")
-                    +themeVid("", "Space", "space")
-                    +themeVid("", "Waves", "waves")
-                    +themeVid("", "Wind Energy", "windenergy")
+                    each val in themes
+                        - let id = val.replace(/\s/g,'').toLowerCase()
+                        if id === theme
+                            .settings-theme
+                                input(type="radio" name="theme" id=id class="input-hidden" value=id checked)
+                                label(for=id)
+                                    .theme-img(style=`background-image: url(images/${id}.jpg)`)
+                                span= val
+                        else
+                            .settings-theme
+                                input(type="radio" name="theme" id=id class="input-hidden" value=id)
+                                label(for=val.toLowerCase())
+                                    .theme-img(style=`background-image: url(images/${id}.jpg)`)
+                                span= val

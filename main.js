@@ -13,15 +13,14 @@ const Datastore = require('nedb')
 const db = new Datastore({ filename: 'data/writer.db', autoload: true })
 const dbPref = new Datastore({ filename: 'data/writerPref.db', autoload: true })
 
-// Insert db testing
-
 // Insert pref if null
-/*
 dbPref.loadDatabase((err) => {
     dbPref.find({}, (err, docs) => {
         if (docs.length === 0) {
             const prefDoc = {
-                darkmode : false
+                darkmode : false,
+                fontfamily: 'AmaticSC',
+                fontsize: 32
             }
 
             dbPref.insert(prefDoc, (err, newDoc) =>  {
@@ -30,8 +29,9 @@ dbPref.loadDatabase((err) => {
         }
     })
 })
-*/
+
 /*
+// testdoc
 var doc = { content: "Test 123.. :-)", filename: "Testnavn" }
 
 db.insert(doc, function (err, newDoc) {   // Callback is optional
