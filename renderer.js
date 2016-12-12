@@ -48,6 +48,11 @@ $(function() {
         ipc.send('full-screen')
     })
 
+    // Save file as txt
+    $(document).on('click', '#btn-save-file-txt', _ => {
+        ipc.send('save-file-as-txt', $('#editor').text())
+    })
+
     // Settings
     $(document).on('click', '#btn-settings', (e) => {
         const pug = require('pug')

@@ -77,7 +77,7 @@ app.on('activate', _ => {
 })
 
 // Save file
-ipc.on('save-file', (evt, content) => {
+ipc.on('save-file-as-txt', (evt, content) => {
     console.log('save file with content: ' + content)
     dialog.showSaveDialog({
         title: 'Save file',

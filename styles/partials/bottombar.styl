@@ -2,11 +2,23 @@
     bottom 0
     position fixed
     width 100%
+    #btn-save-file
+        float left
     #btn-full-screen
-        margin 25px
-        opacity .25
-        position relative
         float right
+    .btn
         transition all 250ms cubic-bezier(0,1,.57,1)
+        position relative
+        margin 25px
+        opacity .35
         &:hover
             opacity 1
+    #btn-save-file-dialog
+        background-color eggwhite
+        display inline-block
+        border-radius 5px
+        ul
+            padding 5px
+            li
+                font-size 14px
+                border solid 1px transparent
