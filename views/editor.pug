@@ -1,5 +1,6 @@
 include topbar.pug
-#editor.bg-check(contenteditable="true" style=`font-size:${fontsize}px; font-family:${fontfamily}`)
+textarea#editor.bg-check(style=`font-size:${fontsize}px; font-family:${fontfamily}`)
+include bottombar.pug
 
 unless theme == 'default'
     if usevideo
@@ -8,4 +9,3 @@ unless theme == 'default'
                 source(src=`video/${theme}.mp4`, type='video/mp4')
     else
         .image-bg(style=`background-image: url(images/${theme}.jpg)`)
-        p= theme

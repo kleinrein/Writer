@@ -41,6 +41,11 @@ $(function() {
         showContent('layout')
     })
 
+    // Full screen
+    $(document).on('click', '#btn-full-screen', (e) => {
+        ipc.send('full-screen')
+    })
+
     // Settings
     $(document).on('click', '#btn-settings', (e) => {
         const pug = require('pug')
@@ -62,15 +67,13 @@ $(function() {
     $(document).on('click', '#btn-close-settings', (e) => {
         $('#settings-wrapper').velocity('transition.slideUpOut', {
             duration: 300,
-            complete: _ => $(this).remove()
+            complete: _ => $('#settings-wrapper').remove()
         })
     })
 
     // Font size changed
     $(document).on('change input', '#setting-font-size', (e) => {
-
         const $fontSizeText = $('#setting-font-size-text')
-
         $fontSizeText.position($(e.target).position())
     })
 
@@ -80,7 +83,6 @@ $(function() {
 
     // Delete document
     $(document).on('click', '.overview-delete', (e) => {
-        console.log('delete')
         const doc = $(e.target).closest('.overview-doc')
 
         const id = $(e.target).closest('.overview').data('id')
@@ -109,10 +111,7 @@ $(function() {
             opacity: 1
         }, {
             duration: 750,
-            easing: "easeOutQuart",
-            complete: _ => {
-                console.log('complete')
-            }
+            easing: "easeOutQuart"
         })
 
         const removeUndoBtn = _ => {
@@ -130,13 +129,10 @@ $(function() {
 
         // Start timer
         let undoTimer = setTimeout(_ => {
-            console.log('five sec has gone ')
-
             db.loadDatabase((err) => {
                 db.remove({
                     _id: id
                 }, {}, (err, numRemoved) => {
-                    console.log('removed')
                     doc.remove()
                 })
             })
@@ -147,20 +143,35 @@ $(function() {
         // Click listener to button
         document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
             clearTimeout(undoTimer)
-            console.log('clicked undo')
             doc.fadeIn()
 
             removeUndoBtn()
         })
     })
 
+    // Show on mouse move
+    $(document).on("mouseover", (e) => {
+        $('#bottombar, #topbar').velocity({
+            opacity: 1
+        }, {
+            duration: 500,
+            easing: 'easeOutQuint'
+        })
+    })
+
     // Change content
     $(document).on('input propertychange paste', '#editor', (e) => {
+        // Focus mode on
+        $('#topbar, #bottombar').velocity({
+            opacity: 0
+        }, {
+            duration: 500
+        })
+
         // Content is changed
         // Save changes
         const id = $(e.target).data('id')
-        const content = $(e.target).prop('innerHTML')
-        console.log(content)
+        const content = $(e.target).val()
 
         db.loadDatabase((err) => {
             db.update({
@@ -177,8 +188,6 @@ $(function() {
 
     // Change filename
     $(document).on('input propertychange paste', '#filename', (e) => {
-        console.log('change')
-
         const filename = $(e.target).text()
         const id = $('#editor').data('id')
 
@@ -196,6 +205,9 @@ $(function() {
     })
 
     const showEditor = (doc, id) => {
+        if (id === undefined) {
+            id = doc._id
+        }
         const editor = document.querySelector('#editor')
 
         const pug = require('pug')
@@ -289,7 +301,6 @@ $(function() {
             dbPref.remove({}, {
                 multi: true
             }, function(err, numRemoved) {
-                console.log(numRemoved)
                 dbPref.insert(serializedForm, (err, newDoc) =>  {
                     updateSettingsView(newDoc)
                 })
@@ -298,8 +309,7 @@ $(function() {
     })
 
     function updateSettingsView(newPref)  {
-        console.log(newPref)
-            // Darkmode
+        // Darkmode
         newPref.darkmode ? $('body').addClass('darkmode') : $('body').removeClass('darkmode')
 
         const editor = document.querySelector('#editor')
@@ -315,6 +325,8 @@ $(function() {
             $('.video-wrapper').remove()
             $('.image-bg').remove()
         } else {
+            $('.video-wrapper').remove()
+            $('.image-bg').remove()
             if (newPref.usevideo) {
                 $('#writer-wrapper').append(`
                         <div class="video-wrapper">
@@ -326,7 +338,7 @@ $(function() {
                     `)
 
             } else {
-                $('#writer-wrapper').append(`<div class="image-bg" style="background-image: url(images/${newPref.theme}.jpg)"></div>"`)
+                $('#writer-wrapper').append(`<div class="image-bg" style="background-image: url(images/${newPref.theme}.jpg)"></div>`)
             }
         }
 

@@ -1,7 +1,7 @@
 0 info it worked if it ends with ok
 1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'start' ]
-2 info using npm@3.10.8
-3 info using node@v6.9.1
+2 info using npm@3.10.9
+3 info using node@v6.9.2
 4 verbose run-script [ 'prestart', 'start', 'poststart' ]
 5 info lifecycle Writer@1.0.0~prestart: Writer@1.0.0
 6 silly lifecycle Writer@1.0.0~prestart: no script for prestart, continuing
@@ -26,8 +26,8 @@
 16 verbose cwd /home/andreas/Documents/ElectronDev/Writer
 17 error Linux 4.4.0-47-generic
 18 error argv "/usr/bin/nodejs" "/usr/bin/npm" "start"
-19 error node v6.9.1
-20 error npm  v3.10.8
+19 error node v6.9.2
+20 error npm  v3.10.9
 21 error code ELIFECYCLE
 22 error Writer@1.0.0 start: `gulp serve`
 22 error Exit status 1
