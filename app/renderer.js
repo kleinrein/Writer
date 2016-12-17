@@ -40,13 +40,20 @@ $(function() {
 
     const saveFile = _ => {
         const $dialog = $('#btn-save-file-dialog')
+
         // Add overlay
         $('#writer-wrapper').append('<div id="btn-save-file-overlay"></div>')
+        $('#btn-save-file-overlay').velocity({
+            opacity: 1
+        })
+
+        $dialog.css('display', 'block')
+        $dialog.velocity({
+            translateY: '-50px',
+            opacity: 1
+        })
 
         $('#btn-save-file-overlay').on('click', _ => {
-            // Remove on click
-            $('#btn-save-file-overlay').remove()
-
             // Animate save dialog
             $dialog.velocity({
                 translateY: '0px',
@@ -56,12 +63,15 @@ $(function() {
                     $dialog.css('display', 'none')
                 }
             })
-        })
 
-        $dialog.css('display', 'block')
-        $dialog.velocity({
-            translateY: '-50px',
-            opacity: 1
+            // Remove overlay
+            $('#btn-save-file-overlay').velocity({
+                opacity: 0,
+            }, {
+                complete: _ => {
+                    $('#btn-save-file-overlay').remove()
+                }
+            })
         })
     }
 
@@ -112,7 +122,14 @@ $(function() {
     // Font size changed
     $(document).on('change input', '#setting-font-size', (e) => {
         const $fontSizeText = $('#setting-font-size-text')
-        $fontSizeText.position($(e.target).position())
+        const fontSize = $(e.target).val()
+
+        switch (fontSize) {
+            case (fontSize > 8 && fontSize < 14):
+                break;
+            case (fontSize >= 14 && <= 20):
+                break;
+        }
     })
 
     $(document).on('focus', '#filename', (e) => {

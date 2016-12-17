@@ -13,6 +13,8 @@ const Datastore = require('nedb')
 const db = new Datastore({ filename: 'data/writer.db', autoload: true })
 const dbPref = new Datastore({ filename: 'data/writerPref.db', autoload: true })
 
+const isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath);
+
 // Insert pref if null
 dbPref.loadDatabase((err) => {
     dbPref.find({}, (err, docs) => {
@@ -41,7 +43,9 @@ db.insert(doc, function (err, newDoc) {   // Callback is optional
 */
 
 
-const client = require('electron-connect').client
+if (isDev) {
+    const client = require('electron-connect').client
+}
 
 app.on('ready', _ => {
     mainWindow = new BrowserWindow({
@@ -58,7 +62,9 @@ app.on('ready', _ => {
         mainWindow = null
     })
 
-    client.create(mainWindow)
+    if (isDev) {
+        client.create(mainWindow)
+    }
 
     const menuContents = Menu.buildFromTemplate(menuTemplate(mainWindow))
     Menu.setApplicationMenu(menuContents)

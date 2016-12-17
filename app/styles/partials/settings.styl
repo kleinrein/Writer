@@ -70,6 +70,7 @@
                     text-transform none
                     font-size 16px
                     display block
+                    margin-top 5px
 
 .input-hidden
     position absolute
@@ -108,14 +109,13 @@ select
 
 // Theme img
 input[type=radio]:checked + label > .theme-img
-    border 2px solid eucalyptus
-    box-shadow 1px 1px 1px darkergrey
+    border 3px solid eucalyptus
 
 input[type=radio] + label>.theme-img
-    border 2px solid transparent
+    border 3px solid transparent
     width 150px
     height 150px
-    transition 500ms all
+    transition 250ms all cubic-bezier(0,1,.57,1)
 
 input[type=radio]:checked + label>.theme-img
     opacity 1
