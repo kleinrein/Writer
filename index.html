@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Writer</title>
-        <script>
+
+<head>
+    <meta charset="utf-8">
+    <title>Writer</title>
+    <script>
             require('electron-stylus')(__dirname + '/styles/master.styl').then(function() {
                 console.log('-- stylus loaded', new Date())
             })
 
-            var $ = jQuery = require('jquery')
-
             require('electron-connect').client.create()
         </script>
-        <link rel='stylesheet' href='http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
-    </head>
-    <body>
-        <div id="writer-wrapper"></div>
-    </body>
+    <link rel='stylesheet' href='http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
+</head>
 
-    <script>
+<body>
+    <div id="writer-wrapper"></div>
+</body>
+<script>
         const app = require('./lib/app')
         app.on('rendered', (html) => {
-            $("#writer-wrapper").html(html)
+            document.getElementById('writer-wrapper').innerHTML = html
         })
 
         let showContent = (view) => {
@@ -43,9 +42,8 @@
                 for (doc of docs) {
                     // Select first 500chars for overview
                     // TODO => Maybe use pug for this?
-                    $('.overviews').prepend(
-                        `
-                        <div class="overview-doc">
+                    document.querySelector('.overviews').insertAdjacentHTML('afterbegin',
+                    `<div class="overview-doc">
                             <div class="overview" data-id="${doc._id}">
                                 <span>${doc.content}</span>
                                 <div class="overview-delete">
@@ -53,16 +51,13 @@
                                 </div>
                             </div>
                             <p class="overview-filename">${doc.filename}</p>
-                        </div>`
-                    )
+                        </div>`)
                 }
             })
         }
-
-        {
-            showContent('layout')
-        }
-
+        
+        showContent('layout')
         require('./renderer.js')
     </script>
+
 </html>

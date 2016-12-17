@@ -2,6 +2,7 @@
     bottom 0
     position fixed
     width 100%
+    z-index 10
     #btn-save-file
         float left
     #btn-full-screen
@@ -14,11 +15,30 @@
         &:hover
             opacity 1
     #btn-save-file-dialog
+        noUserSelect()
         background-color eggwhite
         display inline-block
         border-radius 5px
+        margin 25px
+        left 0
+        position absolute
+        display none
+        opacity 0
+        z-index 10
         ul
-            padding 5px
+            padding 5px 0
             li
                 font-size 14px
                 border solid 1px transparent
+                padding 5px
+                &:hover
+                    background-color darkergrey
+                    color eggwhite
+#btn-save-file-overlay
+    position fixed
+    width 100%
+    height 100%
+    top 0
+    left 0
+    z-index 5
+    background-color rgba(0, 0, 0, .5)

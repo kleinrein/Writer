@@ -23,7 +23,8 @@ const darkThemes = ['aurora', 'evening', 'kaleidoscope', 'psychedelic', 'space',
 const lightThemes = ['lake', 'rainstorm', 'sea', 'waves', 'winter']
 
 // Settings
-$(function() {
+document.addEventListener('DOMContentLoaded', (event) => {
+
     const checkBgs = newPref => {
         if (newPref !== undefined) {
             const dark = darkThemes.includes(newPref.theme)
@@ -38,165 +39,233 @@ $(function() {
         }
     }
 
-    // Back to overview
-    $(document).on('click', '#btn-back', (e) => {
-        showContent('layout')
-    })
+    const saveFile = _ => {
+        const dialog = document.getElementById('btn-save-file-dialog')
+            // Add overlay
+        document.getElementById('writer-wrapper').insertAdjacentHTML('beforeend', '<div id="btn-save-file-overlay"></div>')
 
-    // Full screen
-    $(document).on('click', '#btn-full-screen', (e) => {
-        ipc.send('full-screen')
-    })
+        document.getElementById('btn-save-file-overlay').addEventListener('click', _ => {
+            // Remove on click
+            document.getElementById('btn-save-file-overlay').remove()
 
-    // Save file as txt
-    $(document).on('click', '#btn-save-file-txt', _ => {
-        ipc.send('save-file-as-txt', $('#editor').text())
-    })
+            // Animate save dialog
+            Velocity(dialog, {
+                translateY: '0px',
+                opacity: 0,
+                complete: _ => {
+                    dialog.style.display = 'none'
+                }
+            })
+        })
 
-    // Settings
-    $(document).on('click', '#btn-settings', (e) => {
+        dialog.style.display = 'block'
+        Velocity(dialog, {
+            translateY: '-50px',
+            opacity: 1
+        })
+    }
+
+    const openSettings = _ => {
         const pug = require('pug')
         const compiledFunction = pug.compileFile('views/settings.pug')
-        $('#writer-wrapper').append(compiledFunction(preferences))
+        document.getElementById('writer-wrapper').insertAdjacentHTML('beforeend', compiledFunction(preferences))
 
         // Iterate and show fonts select
-        $('#settings-wrapper select option').each(function(index) {
-            $(this).css('font-family', $(this).text())
-        })
-        $('#settings-wrapper select').css('font-family', $('#settings-wrapper select').text())
+        document.querySelectorAll('#settings-wrapper select option')
+            .forEach(option => option.style.fontFamily = option.innerText())
 
-        $('#settings-wrapper').velocity('transition.slideDownIn', {
+        document.querySelector('#settings-wrapper select').style.fontFamily =
+            document.querySelector('#settings-wrapper select').innerText()
+
+        Velocity(document.getElementById('settings-wrapper'), ('transition.slideDownIn'), {
             duration: 300
         })
-    })
+    }
 
-    // Close settings
-    $(document).on('click', '#btn-close-settings', (e) => {
-        $('#settings-wrapper').velocity('transition.slideUpOut', {
-            duration: 300,
-            complete: _ => $('#settings-wrapper').remove()
-        })
-    })
+    // Click events
+    document.addEventListener("click", (e) => {
+        const target = e.target;
 
-    // Font size changed
-    $(document).on('change input', '#setting-font-size', (e) => {
-        const $fontSizeText = $('#setting-font-size-text')
-        $fontSizeText.position($(e.target).position())
-    })
+        console.log(target)
 
-    $(document).on('focus', '#filename', (e) => {
+        if (target.id == 'btn-back') {
+            showContent('layout')
+        }
 
-    })
+        if (target.id == 'btn-full-screen') {
+            ipc.send('full-screen')
+        }
 
-    // Delete document
-    $(document).on('click', '.overview-delete', (e) => {
-        const doc = $(e.target).closest('.overview-doc')
+        if (target.id == 'btn-save-file') {
+            saveFile()
+        }
 
-        const id = $(e.target).closest('.overview').data('id')
+        if (target.id == 'btn-save-file-txt') {
+            ipc.send('save-file-as-txt', document.getElementById('editor').innerText())
+        }
 
-        // Remove document view
-        doc.addClass('overview-delete-anim')
-        doc.fadeOut()
+        if (target.id == 'btn-settings') {
+            openSettings()
+        }
 
-        // Update view (remove deleted doc)
-        let undo = false
-
-        // Make a undo button
-        $('#writer-wrapper').append(`
-            <div class="overview-undo-delete" data-id="${id}" hidden="hidden">
-                <button>
-                    <span>Undo</span>
-                </button>
-            </div>`)
-
-        let undoBtn = $(`.overview-undo-delete[data-id='${id}']`)
-
-        // Show undo button
-        undoBtn.removeAttr('hidden')
-        undoBtn.velocity({
-            bottom: "0",
-            opacity: 1
-        }, {
-            duration: 750,
-            easing: "easeOutQuart"
-        })
-
-        const removeUndoBtn = _ => {
-            undoBtn.velocity({
-                bottom: "-50px",
-                opacity: 0
-            }, {
-                duration: 750,
-                easing: "easeOutQuart",
-                complete: _ => {
-                    undoBtn.remove()
-                }
+        if (target.id == 'btn-close-settings') {
+            Velocity(document.getElementById('settings-wrapper'), 'transition.slideUpOut', {
+                duration: 300,
+                complete: _ => document.getElementById('settings-wrapper').remove()
             })
         }
 
-        // Start timer
-        let undoTimer = setTimeout(_ => {
-            db.loadDatabase((err) => {
-                db.remove({
-                    _id: id
-                }, {}, (err, numRemoved) => {
-                    doc.remove()
-                })
-            })
 
-            removeUndoBtn()
-        }, 3000)
+        if (target.classList.contains('overview-delete')) {
+            const doc = $(e.target).closest('.overview-doc')
 
-        // Click listener to button
-        document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
-            clearTimeout(undoTimer)
-            doc.fadeIn()
+            const id = $(e.target).closest('.overview').data('id')
 
-            removeUndoBtn()
-        })
-    })
+            // Remove document view
+            doc.addClass('overview-delete-anim')
+            doc.fadeOut()
 
-    // Show on mouse move
-    $(document).on("mouseover", (e) => {
-        if ($('#bottombar').css('opacity') == 0) {
-            $('#bottombar, #topbar').velocity({
+            // Update view (remove deleted doc)
+            let undo = false
+
+            // Make a undo button
+            $('#writer-wrapper').append(`
+                <div class="overview-undo-delete" data-id="${id}" hidden="hidden">
+                    <button>
+                        <span>Undo</span>
+                    </button>
+                </div>`)
+
+            let undoBtn = $(`.overview-undo-delete[data-id='${id}']`)
+
+            // Show undo button
+            undoBtn.removeAttr('hidden')
+            undoBtn.velocity({
+                bottom: "0",
                 opacity: 1
             }, {
-                duration: 500,
-                easing: 'easeOutQuint'
+                duration: 750,
+                easing: "easeOutQuart"
+            })
+
+            const removeUndoBtn = _ => {
+                undoBtn.velocity({
+                    bottom: "-50px",
+                    opacity: 0
+                }, {
+                    duration: 750,
+                    easing: "easeOutQuart",
+                    complete: _ => {
+                        undoBtn.remove()
+                    }
+                })
+            }
+
+            // Start timer
+            let undoTimer = setTimeout(_ => {
+                db.loadDatabase((err) => {
+                    db.remove({
+                        _id: id
+                    }, {}, (err, numRemoved) => {
+                        doc.remove()
+                    })
+                })
+
+                removeUndoBtn()
+            }, 3000)
+
+            // Click listener to button
+            document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
+                clearTimeout(undoTimer)
+                doc.fadeIn()
+
+                removeUndoBtn()
             })
         }
-    })
 
-    // Change content
-    $(document).on('input propertychange paste', '#editor', (e) => {
-        // Focus mode on
-        $('#topbar, #bottombar').velocity({
-            opacity: 0
-        }, {
-            duration: 500
-        })
+        if (target.classList.contains('overview-new-file')) {
+            let id = $(e.target).data('id')
+                // TODO => Fix this properly, so click on span binds to parent
+            if (id === undefined)
+                id = $(e.target).parent().data('id')
 
-        // Content is changed
-        // Save changes
-        const id = $(e.target).data('id')
-        const content = $(e.target).val()
-
-        db.loadDatabase((err) => {
-            db.update({
-                _id: id
-            }, {
-                $set: {
-                    content: content
+            // New document
+            db.loadDatabase((err) => {
+                let emptyDoc = {
+                    content: "",
+                    filename: "untitled",
+                    toDelete: false
                 }
-            }, {}, _ => {
-                console.log('content updated :)')
+                db.insert(emptyDoc, function (err, newDoc) {
+                    if (err === null) showEditor(newDoc, id)
+                });
             })
-        })
-    })
+        }
 
-    // Change filename
-    $(document).on('input propertychange paste', '#filename', (e) => {
+        if (target.classList.contains('overview')) {
+            // Close if user clicked delete button
+            if ($(e.target).classList.contains('overview-delete') ||
+                $(e.target).classList.contains('ion-ios-close-empty')) return
+
+            let id = $(e.target).data('id')
+                // TODO => Fix this properly, so click on span binds to parent
+            if (id === undefined)
+                id = $(e.target).parent().data('id')
+
+            // Existing document
+            db.loadDatabase((err) => {
+                db.findOne({
+                    _id: id
+                }, (err, doc) => {
+                    if (err === null)
+                        if (doc != null) {
+                            showEditor(doc, id)
+                        }
+                })
+            })
+        }
+
+
+        if (target.classList.contains('target')) {
+            // do stuff
+            console.log(e.target);
+        }
+    });
+
+    document.addEventListener('change', (e) => {
+        // Setting font size
+        if (e.target.id == 'setting-font-size') {
+            document.getElementById('setting-font-size-text').position(e.target).position()
+        }
+
+        // Editor
+        if (e.target.id == 'editor') {
+            // Focus mode on
+            $('#topbar, #bottombar').velocity({
+                opacity: 0
+            }, {
+                duration: 500
+            })
+
+            // Content is changed
+            // Save changes
+            const id = $(e.target).data('id')
+            const content = $(e.target).val()
+
+            db.loadDatabase((err) => {
+                db.update({
+                    _id: id
+                }, {
+                    $set: {
+                        content: content
+                    }
+                }, {}, _ => {
+                    console.log('content updated :)')
+                })
+            })
+        }
+
+        // Filename
         const filename = $(e.target).text()
         const id = $('#editor').data('id')
 
@@ -213,6 +282,17 @@ $(function() {
         })
     })
 
+    document.addEventListener('mouseover', (e) => {
+        if ($('#bottombar').css('opacity') == 0) {
+            $('#bottombar, #topbar').velocity({
+                opacity: 1
+            }, {
+                duration: 500,
+                easing: 'easeOutQuint'
+            })
+        }
+    })
+
     const showEditor = (doc, id) => {
         if (id === undefined) {
             id = doc._id
@@ -221,28 +301,30 @@ $(function() {
 
         const pug = require('pug')
         const compiledFunction = pug.compileFile('views/editor.pug')
+        const writerWrapper = document.getElementById('writer-wrapper')
 
-        $('body').css('overflow', 'hidden')
-        $('#writer-wrapper').velocity({
+        document.querySelector('body').style.overflow = 'hidden'
+        Velocity(writerWrapper, {
             opacity: 0
         }, {
             duration: 250,
-            complete: function() {
+            complete: function () {
                 dbPref.loadDatabase((err) => {
                     dbPref.find({}, (err, docs) => {
                         preferences = docs[docs.length - 1]
-                        $('#writer-wrapper').html(compiledFunction(preferences))
+                        writerWrapper.innerHTML = compiledFunction(preferences())
 
-                        $('#editor').html(doc.content)
-                        $('#filename').html(doc.filename)
+                        document.getElementById('editor').innerHTML = doc.content
+                        document.getElementById('filename').innerHTML = doc.filename
 
                         // TODO => Store the id somewhere else?
-                        $('#editor').attr('data-id', id)
+                        document.getElementById('editor').setAttribute('data-id', id)
 
                         // Show
                         checkBgs(preferences)
-                        $('#writer-wrapper').css('transform', 'none')
-                        $('#writer-wrapper').velocity({
+
+                        writerWrapper.syle.transform = 'none'
+                        Velocity(writerWrapper, {
                             opacity: 1
                         }, {
                             duration: 200
@@ -251,54 +333,10 @@ $(function() {
                 })
             }
         })
-
-
     }
 
-    // New document
-    $(document).on('click', '.overview-new-file', (e) => {
-        let id = $(e.target).data('id')
-            // TODO => Fix this properly, so click on span binds to parent
-        if (id === undefined)
-            id = $(e.target).parent().data('id')
-
-        // New document
-        db.loadDatabase((err) => {
-            let emptyDoc = {
-                content: "",
-                filename: "untitled",
-                toDelete: false
-            }
-            db.insert(emptyDoc, function(err, newDoc) {
-                if (err === null) showEditor(newDoc, id)
-            });
-        })
-    })
-
-    $(document).on('click', '.overview', (e) => {
-        // Close if user clicked delete button
-        if ($(e.target).hasClass('overview-delete') ||
-            $(e.target).hasClass('ion-ios-close-empty')) return
-
-        let id = $(e.target).data('id')
-            // TODO => Fix this properly, so click on span binds to parent
-        if (id === undefined)
-            id = $(e.target).parent().data('id')
-
-        // Existing document
-        db.loadDatabase((err) => {
-            db.findOne({
-                _id: id
-            }, (err, doc) => {
-                if (err === null)
-                    if (doc != null) {
-                        showEditor(doc, id)
-                    }
-            })
-        })
-    })
-
     // Update settings
+    /*
     $(document).on('keyup change', '#settings-form :input', (e) => {
         const form = $(e.target).closest('form')
         const serializedForm = form.serializeArray().reduce((a, x) => {
@@ -309,18 +347,20 @@ $(function() {
         dbPref.loadDatabase((err) => {
             dbPref.remove({}, {
                 multi: true
-            }, function(err, numRemoved) {
+            }, function (err, numRemoved) {
                 dbPref.insert(serializedForm, (err, newDoc) =>  {
                     updateSettingsView(newDoc)
                 })
             });
         })
     })
+    */
 
     function updateSettingsView(newPref)  {
         // Darkmode
-        newPref.darkmode ? $('body').addClass('darkmode') : $('body').removeClass('darkmode')
+        newPref.darkmode ? document.querySelector('body').classList.add('darkmode') : document.querySelector('body').classList.remove('darkmode')
 
+        // Editor
         const editor = document.querySelector('#editor')
 
         // Font family
@@ -329,25 +369,24 @@ $(function() {
         // Font size
         editor.style.fontSize = `${newPref.fontsize}px`
 
+        // Remove old theme
+        document.querySelectorAll('.image-bg').forEach((el) => el.remove())
+        document.querySelectorAll('.video-wrapper').forEach((el) => el.remove())
+
         // Theme
-        if (newPref.theme === 'default') {
-            $('.video-wrapper').remove()
-            $('.image-bg').remove()
-        } else {
-            $('.video-wrapper').remove()
-            $('.image-bg').remove()
+        if (newPref.theme !== 'default') {
             if (newPref.usevideo) {
-                $('#writer-wrapper').append(`
+                document.querySelector('#writer-wrapper')
+                    .insertAdjacentHTML('beforeend', `
                         <div class="video-wrapper">
                             <video preload="metadata" loop="" autoplay="" muted="" class="video">
                                 <source src="video/${newPref.theme}.mp4" type="video/mp4"/>
                             </video>
                             <div class="video-overlay"></div>
-                        </div>
-                    `)
-
+                        </div>`)
             } else {
-                $('#writer-wrapper').append(`<div class="image-bg" style="background-image: url(images/${newPref.theme}.jpg)"></div>`)
+                document.querySelector('#writer-wrapper')
+                    .insertAdjacentHTML('beforeend', `<div class="image-bg" style="background-image: url(images/${newPref.theme}.jpg)"></div>`)
             }
         }
 
