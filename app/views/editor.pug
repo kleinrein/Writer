@@ -6,6 +6,6 @@ unless theme == 'default'
     if usevideo
         .video-wrapper
             video.video(preload='metadata', loop='', autoplay='', muted='')
-                source(src=`video/${theme}.mp4`, type='video/mp4')
+                source(src=`app/video/${theme}.mp4`, type='video/mp4')
     else
-        .image-bg(style=`background-image: url(images/${theme}.jpg)`)
+        .image-bg(style=`background-image: url(app/images/${theme}.jpg)`)

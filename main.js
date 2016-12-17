@@ -7,7 +7,7 @@ const {
     Menu,
     dialog
 } = electron
-const menuTemplate = require('./lib/menu')
+const menuTemplate = require('./app/lib/menu')
 
 const Datastore = require('nedb')
 const db = new Datastore({ filename: 'data/writer.db', autoload: true })

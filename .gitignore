@@ -42,3 +42,6 @@ data
 
 # Electron stuff
 npm-debug.log
+
+# Yarn
+yarn.lock
