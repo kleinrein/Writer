@@ -1,5 +1,14 @@
 gulp = require 'gulp'
+stylus = require 'gulp-stylus'
 electron = require('electron-connect').server.create()
+
+# Compile stylus files
+gulp.task 'css', ->
+    gulp.src('app/styles/master.styl')
+        .pipe(stylus())
+        .pipe(gulp.dest('app/styles/'))
+
+gulp.task('default', ['css'])
 
 gulp.task 'serve', ->
 

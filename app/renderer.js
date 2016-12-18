@@ -124,16 +124,6 @@ $(function() {
         const $fontSizeText = $('#setting-font-size-text')
         const fontSize = $(e.target).val()
 
-        switch (fontSize) {
-            case (fontSize > 8 && fontSize < 14):
-                break;
-            case (fontSize >= 14 && <= 20):
-                break;
-        }
-    })
-
-    $(document).on('focus', '#filename', (e) => {
-
     })
 
     // Delete document
@@ -205,7 +195,7 @@ $(function() {
     })
 
     // Show on mouse move
-    $(document).on("mouseover", (e) => {
+    $(document).on("mousemove", (e) => {
         if ($('#bottombar').css('opacity') == 0) {
             $('#bottombar, #topbar').velocity({
                 opacity: 1
