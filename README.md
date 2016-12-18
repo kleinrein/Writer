@@ -25,9 +25,3 @@ git clone https://github.com/kleinrein/Writer.git
 ```
 yarn install && npm start  
 ````
-
-#### 2. Install dependencies and start
-
-```javascript
-yarn install && npm start  
-```
