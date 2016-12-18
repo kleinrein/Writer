@@ -14,13 +14,17 @@ Writer is under development so it's not quite ready for prime time.
 ### macOS
 
 ## Contribute
-If you want to contribute, clone this repo and follow these steps;
-
 #### 1. Clone the repo
 
-```javascript
+```
 git clone https://github.com/kleinrein/Writer.git
 ```
+
+#### 2. Install dependencies and start
+
+```
+yarn install && npm start  
+````
 
 #### 2. Install dependencies and start
 
