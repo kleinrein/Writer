@@ -6,6 +6,7 @@ Writer is a minimalistic and beautiful app for writers. It boost quite a few bac
 
 ## Installing
 **Not quite yet.. Will come soon**
+
 Writer is under development so it's not quite ready for prime time.
 
 ### Debian Linux (Ubuntu)
@@ -26,4 +27,3 @@ git clone https://github.com/kleinrein/Writer.git
 ```javascript
 yarn install && npm start  
 ```
-
