@@ -14,6 +14,9 @@ const dbPref = new Datastore({
     filename: 'data/writerPref.db'
 })
 
+const data = require('./lib/data.js')
+const dbWriter = data('data/writer.db')
+
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
 
@@ -174,13 +177,8 @@ $(function() {
 
         // Start timer
         let undoTimer = setTimeout(_ => {
-            db.loadDatabase((err) => {
-                db.remove({
-                    _id: id
-                }, {}, (err, numRemoved) => {
-                    doc.remove()
-                })
-            })
+            dbWriter.remove(id)
+                .then(doc.remove())
 
             removeUndoBtn()
         }, 3000)
