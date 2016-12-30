@@ -40,7 +40,6 @@ db.insert(doc, function (err, newDoc) {   // Callback is optional
 });
 */
 
-
 const client = require('electron-connect').client
 
 app.on('ready', _ => {
@@ -98,6 +97,14 @@ ipc.on('save-file-as-txt', (evt, content) => {
     })
 })
 
-ipc.on('full-screen', (evt) => {
+ipc.on('full-screen', evt => {
     mainWindow.setFullScreen(mainWindow.isFullScreen() ? false : true)
 })
+
+function openDialog() {
+    dialog.showOpenDialog({
+        options: {
+            title: 'Test'
+        }
+    })
+}
