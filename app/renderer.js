@@ -5,17 +5,9 @@ const {
     remote
 } = electron
 
-const Datastore = require('nedb')
-const db = new Datastore({
-    filename: 'data/writer.db'
-})
-
-const dbPref = new Datastore({
-    filename: 'data/writerPref.db'
-})
-
 const data = require('./lib/data.js')
 const dbWriter = data('data/writer.db')
+const dbPref = data('data/writerPref.db')
 
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
@@ -126,7 +118,6 @@ $(function() {
     $(document).on('change input', '#setting-font-size', (e) => {
         const $fontSizeText = $('#setting-font-size-text')
         const fontSize = $(e.target).val()
-
     })
 
     // Delete document
@@ -218,17 +209,8 @@ $(function() {
         const id = $(e.target).data('id')
         const content = $(e.target).val()
 
-        db.loadDatabase((err) => {
-            db.update({
-                _id: id
-            }, {
-                $set: {
-                    content: content
-                }
-            }, {}, _ => {
-                // Content saved :-)
-            })
-        })
+        dbWriter.update(id, 'content', content)
+            .catch(err => console.error(err))
     })
 
     // Change filename
@@ -236,17 +218,8 @@ $(function() {
         const filename = $(e.target).text()
         const id = $('#editor').data('id')
 
-        db.loadDatabase((err) => {
-            db.update({
-                _id: id
-            }, {
-                $set: {
-                    filename: filename
-                }
-            }, {}, _ => {
-                console.log('updated')
-            });
-        })
+        dbWriter.update(id, 'filename', filename)
+            .catch(err => console.error(err))
     })
 
     const showEditor = (doc, id) => {
@@ -264,8 +237,8 @@ $(function() {
         }, {
             duration: 250,
             complete: function() {
-                dbPref.loadDatabase((err) => {
-                    dbPref.find({}, (err, docs) => {
+                dbPref.find()
+                    .then(docs => {
                         preferences = docs[docs.length - 1]
                         $('#writer-wrapper').html(compiledFunction(preferences))
 
@@ -284,7 +257,7 @@ $(function() {
                             duration: 200
                         })
                     })
-                })
+                .catch(err => console.error(err))
             }
         })
 
@@ -299,16 +272,14 @@ $(function() {
             id = $(e.target).parent().data('id')
 
         // New document
-        db.loadDatabase((err) => {
-            let emptyDoc = {
-                content: "",
-                filename: "untitled",
-                toDelete: false
-            }
-            db.insert(emptyDoc, function(err, newDoc) {
-                if (err === null) showEditor(newDoc, id)
-            });
-        })
+        let emptyDoc = {
+            content: "",
+            filename: "untitled",
+            toDelete: false
+        }
+        dbWriter.insert(emptyDoc)
+            .then(newDoc => showEditor(newDoc, id))
+            .catch(err => console.error(err))
     })
 
     $(document).on('click', '.overview', (e) => {
@@ -322,16 +293,12 @@ $(function() {
             id = $(e.target).parent().data('id')
 
         // Existing document
-        db.loadDatabase((err) => {
-            db.findOne({
-                _id: id
-            }, (err, doc) => {
-                if (err === null)
-                    if (doc != null) {
-                        showEditor(doc, id)
-                    }
+        dbWriter.find(id)
+            .then(doc => {
+                if (doc != null)
+                    showEditor(doc, id)
             })
-        })
+            .catch(err => console.error(err))
     })
 
     // Update settings
@@ -342,16 +309,16 @@ $(function() {
             return a;
         }, {});
 
-        dbPref.loadDatabase((err) => {
-            dbPref.remove({}, {
-                multi: true
-            }, function(err, numRemoved) {
-                dbPref.insert(serializedForm, (err, newSettings) =>  {
-                    preferences = newSettings
-                    updateSettingsView(newSettings)
-                })
-            });
-        })
+        dbPref.remove(0, true)
+            .then(numRemoved => {
+                dbPref.insert(serializedForm)
+                    .then(newSettings => {
+                        preferences = newSettings
+                        updateSettingsView(newSettings)
+                    })
+                    .catch(err => console.error(err))
+            })
+            .catch(err => console.error(err))
     })
 
     function updateSettingsView(newPref)  {
