@@ -7,8 +7,28 @@ module.exports = mainWindow => {
 
     // Normal template
     // Win && Linux
-    if (process.platform != 'darwin') {
+    if (process.platform == 'darwin') {
+        // MacOS
         template = [
+            {
+                label: name,
+                submenu: [
+                    {
+                        label: `About ${name}`,
+                        role: 'about'
+                    }, {
+                        type: 'separator'
+                    }, {
+                        label: 'Quit',
+                        accelerator: 'Cmd+Q',
+                        click: _ => app.quit()
+                    }
+                ]
+            }
+        ]   
+    }
+
+    template.push(
             {
                 label: 'File',
                 submenu: [
@@ -27,43 +47,31 @@ module.exports = mainWindow => {
                         click: _ => app.quit()
                     }
                 ]
-            }
-        ]
-    } else {
-        // MacOS
-        template = [
+            },
             {
-                label: name,
+                label: 'Edit',
                 submenu: [
                     {
-                        label: `About ${name}`,
-                        role: 'about'
+                        label: 'Undo',
+                        role: 'undo'
+                    }, {
+                        label: 'Redo',
+                        role: 'redo'
                     }, {
                         type: 'separator'
                     }, {
-                        label: 'Quit',
-                        accelerator: 'Cmd+Q',
-                        click: _ => app.quit()
-                    }
-                ]
-            }, {
-                label: 'File',
-                submenu: [
-                    {
-                        label: `Import file`,
-                        accelerator: 'Cmd+I',
-                        click: _ => {
-                            dialog.showOpenDialog({
-                                options: {
-                                    title: 'Test'
-                                }
-                            })
-                        }
+                        label: 'Cut',
+                        role: 'cut'
+                    }, {
+                        label: 'Copy',
+                        role: 'copy'
+                    }, {
+                        label: 'Paste',
+                        role: 'paste'
                     }
                 ]
             }
-        ]
-    }
+    )
 
     return template
 }
