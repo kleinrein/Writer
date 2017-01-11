@@ -194,6 +194,7 @@ $(function() {
 
     // Show on mouse move
     $(document).on("mousemove", (e) => {
+        console.log('mouse move')
         if ($('#bottombar').css('opacity') == 0) {
             $('#bottombar, #topbar').velocity({
                 opacity: 1
@@ -207,11 +208,13 @@ $(function() {
     // Change content
     $(document).on('input propertychange paste', '#editor', (e) => {
         // Focus mode on
-        $('#topbar, #bottombar').velocity({
-            opacity: 0
-        }, {
-            duration: 500
-        })
+        if ($('#bottombar').css('opacity') == 1) {
+            $('#topbar, #bottombar').velocity({
+                opacity: 0
+            }, {
+                duration: 500
+            })
+        }
 
         // Content is changed
         // Save changes
