@@ -7,6 +7,7 @@ const {
     Menu,
     dialog
 } = electron
+
 const menuTemplate = require('./app/lib/menu')
 
 const Datastore = require('nedb')
@@ -29,16 +30,6 @@ dbPref.loadDatabase((err) => {
         }
     })
 })
-
-/*
-// Testdoc
-var doc = { content: "Test 123.. :-)", filename: "Testnavn" }
-
-db.insert(doc, function (err, newDoc) {   // Callback is optional
-  // newDoc is the newly inserted document, including its _id
-  // newDoc has no key called notToBeSaved since its value was undefined
-});
-*/
 
 const client = require('electron-connect').client
 

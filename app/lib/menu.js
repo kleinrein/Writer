@@ -3,7 +3,7 @@ const { app, ipcRenderer: ipc, dialog } = electron
 
 module.exports = mainWindow => {
     const name = app.getName()
-    let template
+    let template = []
 
     // Normal template
     // Win && Linux
