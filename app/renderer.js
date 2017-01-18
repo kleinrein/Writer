@@ -6,8 +6,9 @@ const {
 } = electron
 
 const data = require('./lib/data.js')
-const dbWriter = data('data/writer.db')
-const dbPref = data('data/writerPref.db')
+const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
+const dbWriter = data(`${dbPath}/Writer/writer.db`)
+const dbPref = data(`${dbPath}/Writer/writer.db`)
 
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
@@ -185,7 +186,6 @@ $(function() {
 
     // Show on mouse move
     $(document).on("mousemove", (e) => {
-        console.log('mouse move')
         if ($('#bottombar').css('opacity') == 0) {
             $('#bottombar, #topbar').velocity({
                 opacity: 1

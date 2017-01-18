@@ -10,9 +10,15 @@ const {
 
 const menuTemplate = require('./app/lib/menu')
 
+const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
+// Create folder if it doesn't exists from before
+if (!fs.existsSync(`${dbPath}/Writer`)) {
+    fs.mkdirSync(`${dbPath}/Writer`)
+}
+
 const Datastore = require('nedb')
-const db = new Datastore({ filename: 'data/writer.db', autoload: true })
-const dbPref = new Datastore({ filename: 'data/writerPref.db', autoload: true })
+const db = new Datastore({ filename: `${dbPath}/Writer/writer.db`, autoload: true })
+const dbPref = new Datastore({ filename: `${dbPath}/Writer/writerPref.db`, autoload: true })
 
 // Insert pref if null
 dbPref.loadDatabase((err) => {

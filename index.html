@@ -30,7 +30,8 @@
 
         function loadFiles() {
             const Datastore = require('nedb')
-            const db = new Datastore({ filename: 'data/writer.db', autoload: true })
+            const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
+            const db = new Datastore({ filename: `${dbPath}/Writer/writer.db`, autoload: true })
 
             // Retrieve existing docs
             db.find({}, (err, docs) => {
