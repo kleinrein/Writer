@@ -4,9 +4,12 @@
         <meta charset="utf-8">
         <title>Writer</title>
         <script>
+            const isDev = require('electron-is-dev')
             var $ = jQuery = require('jquery')
 
-            require('electron-connect').client.create()
+            if (isDev) {
+                require('electron-connect').client.create()
+            }
         </script>
         <link rel="stylesheet" href="app/styles/master.css" />
     </head>

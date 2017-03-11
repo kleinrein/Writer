@@ -1,31 +1,28 @@
 {
-    "name": "Writer",
-    "version": "1.0.0",
-    "main": "main.js",
-    "license": "MIT",
-    "scripts": {
-        "build": "gulp && rimraf Writer && electron-packager . --platform=darwin,win32,linux --arch=x64 --icon=writer-icon",
-        "start": "gulp && gulp serve"
-    },
-    "dependencies": {
-        "gulp-stylus": "^2.6.0",
-        "jquery": "^3.1.1",
-        "nedb": "^1.8.0",
-        "perfect-scrollbar": "^0.6.14",
-        "pug": "^2.0.0-beta6",
-        "stylus": "^0.54.5",
-        "underscore": "^1.8.3"
-    },
-    "devDependencies": {
-        "electron": "^1.4.5",
-        "electron-connect": "^0.6.1",
-        "electron-packager": "^8.4.0",
-        "eslint": "^3.11.0",
-        "eslint-config-standard": "^6.2.1",
-        "eslint-plugin-promise": "^3.4.0",
-        "eslint-plugin-standard": "^2.0.1",
-        "gulp": "^3.9.1",
-        "gulp-coffee": "^2.3.3",
-        "rimraf": "^2.5.4"
-    }
+  "name": "Writer",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "gulp && rimraf Writer-linux-x64 && electron-packager . --platform=darwin,win32,linux --arch=x64 --icon=writer-icon",
+    "start": "gulp && gulp serve"
+  },
+  "dependencies": {
+    "electron-is-dev": "^0.1.2",
+    "gulp-stylus": "^2.6.0",
+    "jquery": "^3.1.1",
+    "nedb": "^1.8.0",
+    "perfect-scrollbar": "^0.6.14",
+    "pug": "^2.0.0-beta6",
+    "stylus": "^0.54.5",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "electron": "^1.6.2",
+    "electron-connect": "^0.6.1",
+    "electron-packager": "^8.5.2",
+    "gulp": "^3.9.1",
+    "gulp-coffee": "^2.3.3",
+    "rimraf": "^2.5.4"
+  }
 }

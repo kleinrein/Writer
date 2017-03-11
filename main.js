@@ -7,10 +7,10 @@ const {
     Menu,
     dialog
 } = electron
-
+const isDev = require('electron-is-dev')
 const menuTemplate = require('./app/lib/menu')
-
 const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
+
 // Create folder if it doesn't exists from before
 if (!fs.existsSync(`${dbPath}/Writer`)) {
     fs.mkdirSync(`${dbPath}/Writer`)
@@ -20,9 +20,12 @@ const Datastore = require('nedb')
 const db = new Datastore({ filename: `${dbPath}/Writer/writer.db`, autoload: true })
 const dbPref = new Datastore({ filename: `${dbPath}/Writer/writerPref.db`, autoload: true })
 
+let client
+
 // Insert pref if null
 dbPref.loadDatabase((err) => {
     dbPref.find({}, (err, docs) => {
+        console.log(docs)
         if (docs.length === 0) {
             const prefDoc = {
                 darkmode : false,
@@ -30,14 +33,14 @@ dbPref.loadDatabase((err) => {
                 fontsize: 32
             }
 
-            dbPref.insert(prefDoc, (err, newDoc) =>  {
-
-            })
+            dbPref.insert(prefDoc, (err, newDoc) =>  {})
         }
     })
 })
 
-const client = require('electron-connect').client
+if (isDev) {
+    client = require('electron-connect').client
+}
 
 app.on('ready', _ => {
     mainWindow = new BrowserWindow({
@@ -54,9 +57,9 @@ app.on('ready', _ => {
         mainWindow = null
     })
 
-
-    client.create(mainWindow)
-
+    if (isDev) {
+        client.create(mainWindow)
+    }
 
     const menuContents = Menu.buildFromTemplate(menuTemplate(mainWindow))
     Menu.setApplicationMenu(menuContents)
@@ -92,6 +95,10 @@ ipc.on('save-file-as-txt', (evt, content) => {
                 console.log(`It's saved`)
             })
     })
+})
+
+ipc.on('save-file-as-html', (evt, content) => {
+    console.log('save-file-as-html:' + content)
 })
 
 ipc.on('full-screen', evt => {

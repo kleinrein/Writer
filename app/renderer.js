@@ -8,7 +8,7 @@ const {
 const data = require('./lib/data.js')
 const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
 const dbWriter = data(`${dbPath}/Writer/writer.db`)
-const dbPref = data(`${dbPath}/Writer/writer.db`)
+const dbPref = data(`${dbPath}/Writer/writerPref.db`)
 
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
@@ -173,7 +173,7 @@ $(function() {
                 .then(doc.remove())
 
             removeUndoBtn()
-        }, 3000)
+        }, 2000)
 
         // Click listener to button
         document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
@@ -242,7 +242,8 @@ $(function() {
             complete: function() {
                 dbPref.find()
                     .then(docs => {
-                        preferences = docs[docs.length - 1]
+                        preferences = docs[0]
+                        console.log(preferences)
                         $('#writer-wrapper').html(compiledFunction(preferences))
 
                         $('#editor').html(doc.content)
