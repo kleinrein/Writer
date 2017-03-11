@@ -1,3 +1,4 @@
+const constants = require('../constants')
 const electron = require('electron')
 const {
     app,
@@ -6,9 +7,8 @@ const {
 } = electron
 
 const data = require('./lib/data.js')
-const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
-const dbWriter = data(`${dbPath}/Writer/writer.db`)
-const dbPref = data(`${dbPath}/Writer/writerPref.db`)
+const dbWriter = data(`${constants.DB_PATH}/Writer/writer.db`)
+const dbPref = data(`${constants.DB_PATH}/Writer/writerPref.db`)
 
 require('./lib/vendor/velocity.min.js')
 require('./lib/vendor/velocity.ui.min.js')
@@ -22,7 +22,7 @@ const lightThemes = ['lake', 'rainstorm', 'sea', 'waves', 'winter']
 $(function() {
     const checkBgs = newPref => {
         if (newPref !== undefined) {
-            const dark = darkThemes.includes(newPref.theme)
+            const dark = darkThemes.includes(newPref.theme) || newPref.darkmode
             const light = lightThemes.includes(newPref.theme)
 
             const bgChecks = document.querySelectorAll('.bg-check')

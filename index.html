@@ -18,6 +18,7 @@
     </body>
 
     <script>
+        const constants = require('./constants')
         const app = require('./app/lib/app')
         app.on('rendered', (html) => {
             $("#writer-wrapper").html(html)
@@ -33,8 +34,7 @@
 
         function loadFiles() {
             const Datastore = require('nedb')
-            const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
-            const db = new Datastore({ filename: `${dbPath}/Writer/writer.db`, autoload: true })
+            const db = new Datastore({ filename: `${constants.DB_PATH}/Writer/writer.db`, autoload: true })
 
             // Retrieve existing docs
             db.find({}, (err, docs) => {

@@ -1,3 +1,5 @@
+const constants = require('./constants')
+
 const electron = require('electron')
 const fs = require('fs')
 const {
@@ -9,16 +11,16 @@ const {
 } = electron
 const isDev = require('electron-is-dev')
 const menuTemplate = require('./app/lib/menu')
-const dbPath = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/Documents")
+
 
 // Create folder if it doesn't exists from before
-if (!fs.existsSync(`${dbPath}/Writer`)) {
-    fs.mkdirSync(`${dbPath}/Writer`)
+if (!fs.existsSync(`${constants.DB_PATH}/Writer`)) {
+    fs.mkdirSync(`${constants.DB_PATH}/Writer`)
 }
 
 const Datastore = require('nedb')
-const db = new Datastore({ filename: `${dbPath}/Writer/writer.db`, autoload: true })
-const dbPref = new Datastore({ filename: `${dbPath}/Writer/writerPref.db`, autoload: true })
+const db = new Datastore({ filename: `${constants.DB_PATH}/Writer/writer.db`, autoload: true })
+const dbPref = new Datastore({ filename: `${constants.DB_PATH}/Writer/writerPref.db`, autoload: true })
 
 let client
 
