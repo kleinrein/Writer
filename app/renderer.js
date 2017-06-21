@@ -31,6 +31,8 @@ $(function() {
                 bgChecks[i].classList.remove(dark ? 'light' : 'dark')
                 bgChecks[i].classList.add(dark ? 'dark' : 'light')
             }
+
+            if(dark) { $('body').addClass('darkmode') } else { $('body').removeClass('darkmode') }
         }
     }
 
