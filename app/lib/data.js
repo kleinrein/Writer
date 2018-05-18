@@ -2,7 +2,7 @@
 const Datastore = require('nedb')
 
 class Data {
-    constructor(filename) {
+    constructor(filename) { 
         this.db = new Datastore({
             filename: filename
         })
@@ -12,7 +12,7 @@ class Data {
         return new Promise((resolve, reject) => {
             if (multi === true) {
                 this.db.loadDatabase((err) => {
-                    this.db.remove({
+                    this.db.remove({},  {
                         multi: true
                     }, (err, numRemoved) => {
                         if (err) reject(err)

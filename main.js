@@ -46,10 +46,12 @@ if (isDev) {
 
 app.on('ready', _ => {
     mainWindow = new BrowserWindow({
-        width: 800,
+        width: 1000,
         height: 600,
-        minWidth: 500,
+        minWidth: 650,
         minHeight: 400,
+        center: true,
+        titleBarStyle: "default",
         title: 'Writer'
     })
     mainWindow.loadURL(`file://${__dirname}/index.html`)

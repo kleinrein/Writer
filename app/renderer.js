@@ -1,10 +1,6 @@
 const constants = require('../constants')
 const electron = require('electron')
-const {
-    app,
-    ipcRenderer: ipc,
-    remote
-} = electron
+const {app, ipcRenderer: ipc, remote} = electron
 
 const data = require('./lib/data.js')
 const dbWriter = data(`${constants.DB_PATH}/Writer/writer.db`)
@@ -15,24 +11,39 @@ require('./lib/vendor/velocity.ui.min.js')
 
 // Globals
 let preferences
-const darkThemes = ['aurora', 'evening', 'kaleidoscope', 'psychedelic', 'space', 'windenergy']
+const darkThemes = [
+    'aurora',
+    'evening',
+    'kaleidoscope',
+    'psychedelic',
+    'space',
+    'windenergy'
+]
 const lightThemes = ['lake', 'rainstorm', 'sea', 'waves', 'winter']
 
 // Settings
 $(function() {
     const checkBgs = newPref => {
         if (newPref !== undefined) {
-            const dark = darkThemes.includes(newPref.theme) || newPref.darkmode
+            const dark = darkThemes.includes(newPref.theme) || newPref.darkmode === "on"
             const light = lightThemes.includes(newPref.theme)
 
             const bgChecks = document.querySelectorAll('.bg-check')
 
             for (i = 0; i < bgChecks.length; ++i) {
-                bgChecks[i].classList.remove(dark ? 'light' : 'dark')
-                bgChecks[i].classList.add(dark ? 'dark' : 'light')
+                bgChecks[i].classList.remove(dark
+                    ? 'light'
+                    : 'dark')
+                bgChecks[i].classList.add(dark
+                    ? 'dark'
+                    : 'light')
             }
 
-            if(dark) { $('body').addClass('darkmode') } else { $('body').removeClass('darkmode') }
+            if (dark) {
+                $('body').addClass('darkmode')
+            } else {
+                $('body').removeClass('darkmode')
+            }
         }
     }
 
@@ -41,15 +52,10 @@ $(function() {
 
         // Add overlay
         $('#writer-wrapper').append('<div id="btn-save-file-overlay"></div>')
-        $('#btn-save-file-overlay').velocity({
-            opacity: 1
-        })
+        $('#btn-save-file-overlay').velocity({opacity: 1})
 
         $dialog.css('display', 'block')
-        $dialog.velocity({
-            translateY: '-50px',
-            opacity: 1
-        })
+        $dialog.velocity({translateY: '-50px', opacity: 1})
 
         $('#btn-save-file-overlay').on('click', _ => {
             // Animate save dialog
@@ -64,7 +70,7 @@ $(function() {
 
             // Remove overlay
             $('#btn-save-file-overlay').velocity({
-                opacity: 0,
+                opacity: 0
             }, {
                 complete: _ => {
                     $('#btn-save-file-overlay').remove()
@@ -104,9 +110,7 @@ $(function() {
         })
         $('#settings-wrapper select').css('font-family', $('#settings-wrapper select').text())
 
-        $('#settings-wrapper').velocity('transition.slideDownIn', {
-            duration: 300
-        })
+        $('#settings-wrapper').velocity('transition.slideDownIn', {duration: 300})
     })
 
     // Close settings
@@ -125,8 +129,8 @@ $(function() {
 
     // Delete document
     $(document).on('click', '.overview-delete', (e) => {
+        const undoDuration = 5000
         const doc = $(e.target).closest('.overview-doc')
-
         const id = $(e.target).closest('.overview').data('id')
 
         // Remove document view
@@ -171,11 +175,10 @@ $(function() {
 
         // Start timer
         let undoTimer = setTimeout(_ => {
-            dbWriter.remove(id)
-                .then(doc.remove())
+            dbWriter.remove(id).then(doc.remove())
 
             removeUndoBtn()
-        }, 2000)
+        }, undoDuration)
 
         // Click listener to button
         document.querySelector(`.overview-undo-delete[data-id='${id}'] button`).addEventListener('click', _ => {
@@ -204,9 +207,7 @@ $(function() {
         if ($('#bottombar').css('opacity') == 1) {
             $('#topbar, #bottombar').velocity({
                 opacity: 0
-            }, {
-                duration: 500
-            })
+            }, {duration: 500})
         }
 
         // Content is changed
@@ -214,8 +215,7 @@ $(function() {
         const id = $(e.target).data('id')
         const content = $(e.target).val()
 
-        dbWriter.update(id, 'content', content)
-            .catch(err => console.error(err))
+        dbWriter.update(id, 'content', content).catch(err => console.error(err))
     })
 
     // Change filename
@@ -223,8 +223,7 @@ $(function() {
         const filename = $(e.target).text()
         const id = $('#editor').data('id')
 
-        dbWriter.update(id, 'filename', filename)
-            .catch(err => console.error(err))
+        dbWriter.update(id, 'filename', filename).catch(err => console.error(err))
     })
 
     const showEditor = (doc, id) => {
@@ -242,94 +241,93 @@ $(function() {
         }, {
             duration: 250,
             complete: function() {
-                dbPref.find()
-                    .then(docs => {
-                        preferences = docs[0]
-                        console.log(preferences)
-                        $('#writer-wrapper').html(compiledFunction(preferences))
+                dbPref.find().then(docs => {
+                    preferences = docs[0]
+                    console.log(preferences)
+                    $('#writer-wrapper').html(compiledFunction(preferences))
 
-                        $('#editor').html(doc.content)
-                        $('#filename').html(doc.filename)
+                    $('#editor').html(doc.content)
+                    $('#filename').html(doc.filename)
 
-                        // TODO => Store the id somewhere else?
-                        $('#editor').attr('data-id', id)
+                    // TODO => Store the id somewhere else?
+                    $('#editor').attr('data-id', id)
 
-                        // Show
-                        checkBgs(preferences)
-                        $('#writer-wrapper').css('transform', 'none')
-                        $('#writer-wrapper').velocity({
-                            opacity: 1
-                        }, {
-                            duration: 200
-                        })
-                    })
-                .catch(err => console.error(err))
+                    // Show
+                    checkBgs(preferences)
+                    $('#writer-wrapper').css('transform', 'none')
+                    $('#writer-wrapper').velocity({
+                        opacity: 1
+                    }, {duration: 200})
+                }).catch(err => console.error(err))
             }
         })
-
 
     }
 
     // New document
     $(document).on('click', '.overview-new-file', (e) => {
         let id = $(e.target).data('id')
-            // TODO => Fix this properly, so click on span binds to parent
+        // TODO => Fix this properly, so click on span binds to parent
         if (id === undefined)
             id = $(e.target).parent().data('id')
 
-        // New document
+            // New document
         let emptyDoc = {
             content: "",
             filename: "untitled",
             toDelete: false
         }
-        dbWriter.insert(emptyDoc)
-            .then(newDoc => showEditor(newDoc, id))
-            .catch(err => console.error(err))
+        dbWriter.insert(emptyDoc).then(newDoc => showEditor(newDoc, id)).catch(err => console.error(err))
     })
 
     $(document).on('click', '.overview', (e) => {
         // Close if user clicked delete button
-        if ($(e.target).hasClass('overview-delete') ||
-            $(e.target).hasClass('ion-ios-close-empty')) return
+        if ($(e.target).hasClass('overview-delete') || $(e.target).hasClass('ion-ios-close-empty'))
+            return
 
         let id = $(e.target).data('id')
-            // TODO => Fix this properly, so click on span binds to parent
+        // TODO => Fix this properly, so click on span binds to parent
         if (id === undefined)
             id = $(e.target).parent().data('id')
 
-        // Existing document
-        dbWriter.find(id)
-            .then(doc => {
-                if (doc != null)
-                    showEditor(doc, id)
-            })
-            .catch(err => console.error(err))
+            // Existing document
+        dbWriter.find(id).then(doc => {
+            if (doc != null)
+                showEditor(doc, id)
+        }).catch(err => console.error(err))
     })
 
     // Update settings
     $(document).on('keyup change', '#settings-form :input', (e) => {
-        const form = $(e.target).closest('form')
-        const serializedForm = form.serializeArray().reduce((a, x) => {
-            a[x.name] = x.value;
-            return a;
-        }, {});
+        const serializedForm = () => {
+            return $('#settings-form').serializeArray().reduce((a, x) => {
+                a[x.name] = x.value;
+                return a;
+            }, {});
+        }
+        
+        let settings = serializedForm()
+        const dark = darkThemes.includes(settings.theme)
+        if (dark) {
+            $("#pref-darkmode").prop("checked", true)
+            settings = serializedForm()
+        } else {
+            $("#pref-darkmode").prop("checked", false)
+            settings = serializedForm()
+        }
 
-        dbPref.remove(0, true)
-            .then(numRemoved => {
-                dbPref.insert(serializedForm)
-                    .then(newSettings => {
-                        preferences = newSettings
-                        updateSettingsView(newSettings)
-                    })
-                    .catch(err => console.error(err))
-            })
-            .catch(err => console.error(err))
+        dbPref.remove(0, true).then((numRemoved) => {
+            dbPref.insert(settings).then(newSettings => {
+                updateSettingsView(newSettings)
+            }).catch(err => console.error(err))
+        }).catch(err => console.error(err))
     })
 
-    function updateSettingsView(newPref)  {
+    function updateSettingsView(newPref) {
         // Darkmode
-        newPref.darkmode ? $('body').addClass('darkmode') : $('body').removeClass('darkmode')
+        newPref.darkmode
+            ? $('body').addClass('darkmode')
+            : $('body').removeClass('darkmode')
 
         const editor = document.querySelector('#editor')
 

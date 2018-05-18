@@ -9,7 +9,7 @@
         .settings.settings-general
             .setting
                 span Dark mode
-                if darkmode
+                if darkmode === "on"
                     input#pref-darkmode(type="checkbox" name="darkmode" checked)
                 else
                     input#pref-darkmode(type="checkbox" name="darkmode")
@@ -18,9 +18,9 @@
                 select(name="fontfamily")
                     -
                         const fonts = ['FiraSans', 'BadScript', 'AmaticSC',
-                                     'Handlee', 'IndieFlower', 'OpenSans',
-                                     'PlayfairDisplay', 'PTSans', 'RobotoLight',
-                                     'RobotRegular', 'RobotoThin'].sort()
+                                    'Handlee', 'IndieFlower', 'OpenSans',
+                                    'PlayfairDisplay', 'PTSans', 'RobotoLight',
+                                    'RobotRegular', 'RobotoThin'].sort()
                     each val in fonts
                         if val === fontfamily
                             option(value=`${val}` selected)= val
@@ -29,13 +29,12 @@
             .setting
                 span Font size
                 input#setting-font-size(type="range" min="8" max="46" step="2" value=`${fontsize}` name="fontsize")
-                small.small#setting-font-size-text Default
         .settings.settings-theme
             .setting
                 span Theme
                 .setting.setting-small
                     label Use video
-                    if usevideo
+                    if usevideo === "on"
                         input(type="checkbox" name="usevideo" checked)
                     else
                         input(type="checkbox" name="usevideo")
